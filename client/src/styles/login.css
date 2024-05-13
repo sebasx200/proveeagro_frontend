@@ -1,0 +1,75 @@
+/*login and signup form*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif
+}
+
+body{
+    background-image: url("./img/form-img/img6.png");
+    background-size: cover; /* La imagen se ajustará para cubrir el área completa */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* This makes the container take up the full height of the viewport */
+  }
+
+  .panel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%; /* Adjust the width as needed */
+    height: 90%; /* Adjust the height as needed */
+    background-color: rgba(236, 236, 236, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    margin: auto;
+    position: absolute;
+  
+  }
+
+#forgot {
+    min-width: 100px;
+    margin-right: auto;
+    text-decoration: none;
+    float: right;
+}
+
+a:hover {
+    text-decoration: none
+}
+
+.form-inline label {
+    padding-left: 10px;
+    margin: 0;
+}
+
+.login-button {
+    border-radius: 10px;
+    width: 55%;
+}
+.btn.btn-success:hover {
+    background-color: white;
+    color: green;
+}
+
+.form-labels{
+    margin-left: 25px;
+}
+
+.form-floating {
+    border-radius: 5px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    
+}
