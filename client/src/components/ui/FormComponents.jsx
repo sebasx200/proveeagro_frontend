@@ -45,4 +45,9 @@ function FormPanel({ children }) {
 function DivInput({ children }) {
   return <div className="form-floating mb-2">{children}</div>;
 }
-export { FormPanel, DivInput, ToggleButton, FormButton, FormLabel };
+
+function SpanMandatory() {
+  return <span className="text-danger">*</span>;
+}
+
+export { FormPanel, DivInput, ToggleButton, FormButton, FormLabel, SpanMandatory };

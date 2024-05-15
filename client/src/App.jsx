@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
 import Home from "./pages/dashboard/Home";
+import AddSupplier from "./pages/suppliers/AddSupplier";
 import NotFound from "./pages/NotFound";
 
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -29,6 +30,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute> 
+          }
+        />
+        <Route
+          path="/supplier/add-supplier/"
+          element={
+            <ProtectedRoute>
+              <AddSupplier />
             </ProtectedRoute>
           }
         />
