@@ -6,6 +6,7 @@ import Register from "./pages/login/Register";
 import Home from "./pages/dashboard/Home";
 import AddSupplier from "./pages/suppliers/AddSupplier";
 import NotFound from "./pages/NotFound";
+import Navbar from "./components/navbar/Navbar";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -23,6 +24,7 @@ function RegisterAndLogout() {
 function App() {
   return (
     <BrowserRouter>
+    <Navbar />
     <div className="container">
       <Routes>
         <Route
