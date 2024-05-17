@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav class="navbar navbar-expand-lg bg-success navbar-dark">
-      <div class="container">
-        <Link className="navbar-brand" to={"/"}>
+    <nav className="navbar navbar-expand-lg bg-success navbar-dark">
+      <div className="container">
+        <Link to={"/"} className="navbar-brand">
             ProveeAgro
         </Link>
         <button
-          class="navbar-toggler"
+          className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNavDropdown"
@@ -19,13 +19,13 @@ function Navbar() {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-          <li class="nav-item dropdown">
+        <div className="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul className="navbar-nav">
+          <li className="nav-item dropdown">
               <a
-                class="nav-link dropdown-toggle"
+                className="nav-link dropdown-toggle"
                 href="#"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -33,27 +33,22 @@ function Navbar() {
               >
                 Fincas
               </a>
-              <ul class="dropdown-menu">
+              <ul className="dropdown-menu">
                 <li>
-                  <a class="dropdown-item" href="#">
-                    Action
+                  <a className="dropdown-item" href="#">
+                    Mis fincas
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#">
-                    Another action
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
-                    Something else here
+                  <a className="dropdown-item" href="#">
+                    Añadir finca
                   </a>
                 </li>
               </ul>
             </li>
-            <li class="nav-item dropdown">
+            <li className="nav-item dropdown">
               <a
-                class="nav-link dropdown-toggle"
+                className="nav-link dropdown-toggle"
                 href="#"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -61,33 +56,28 @@ function Navbar() {
               >
                 Proveedores
               </a>
-              <ul class="dropdown-menu">
+              <ul className="dropdown-menu">
                 <li>
-                  <a class="dropdown-item" href="#">
-                    Action
+                  <a className="dropdown-item" href="#">
+                    Ver mis proveedores
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#">
-                    Another action
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
-                    Something else here
-                  </a>
+                  <Link className="dropdown-item" to={"/supplier/add-supplier/"}>
+                    Añadir un proveedor
+                  </Link>
                 </li>
               </ul>
             </li>
           </ul>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                <Link to="/login" class="nav-link">
+            <ul className="navbar-nav ms-auto">
+                <li className="nav-item">
+                <Link to="/login" className="nav-link">
                     Iniciar sesión
                 </Link>
                 </li>
-                <li class="nav-item">
-                <Link to="/register" class="nav-link">
+                <li className="nav-item">
+                <Link to="/register" className="nav-link">
                     Registrarse
                 </Link>
                 </li>
