@@ -35,9 +35,9 @@ function Navbar() {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Mis fincas
-                  </a>
+                  <Link className="dropdown-item" to={"/farm/farms/"}>
+                    Ver fincas
+                  </Link>
                 </li>
                 <li>
                   <a className="dropdown-item" href="#">

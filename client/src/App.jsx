@@ -6,6 +6,7 @@ import Register from "./pages/login/Register";
 import Home from "./pages/dashboard/Home";
 import Suppliers from "./pages/suppliers/Suppliers";
 import AddSupplier from "./pages/suppliers/AddSupplier";
+import Farms from "./pages/farms/Farms";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/navbar/Navbar";
 
@@ -36,6 +37,7 @@ function App() {
             </ProtectedRoute> 
           }
         />
+        
         <Route
           path="/supplier/suppliers/"
           element={
@@ -49,6 +51,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AddSupplier />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/farm/farms/"
+          element={
+            <ProtectedRoute>
+              <Farms />
             </ProtectedRoute>
           }
         />

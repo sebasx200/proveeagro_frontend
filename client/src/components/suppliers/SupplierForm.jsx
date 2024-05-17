@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { getDepartments, getCities, addSupplier } from "../../api/supplierApi";
 import { FormLabel, SpanMandatory, FormButton } from "../ui/FormComponents";
 import { toast } from "react-hot-toast";
-import {Map} from "../mapSupplier";
+import { Map } from "../mapSupplier";
 
 import { supplierApi } from "../../api/supplierApi";
 
@@ -57,17 +57,19 @@ function SupplierForm() {
 
   // function to handle the click on the map and set the latitude and longitude inputs
   const handleMapClick = (latlng) => {
-    document.getElementById("latitude").value = latlng.lat;
-    document.getElementById("longitude").value = latlng.lng;
+    setLatitude(latlng.lat);
+    setLongitude(latlng.lng);
   };
 
   const createSupplier = (e) => {
     e.preventDefault();
     supplierApi
       .post("/supplier/suppliers/", {
-        name, 
+        name,
         location: {
           address,
+          latitude,
+          longitude,
           city,
         },
       })
@@ -75,9 +77,7 @@ function SupplierForm() {
         if (res.status === 201) toast.success("El proveedor " + name + " ha sido creado correctamente.");
         else toast.error("Error al crear el proveedor " + name);
       })
-      .catch((err) => {
-        alert("Error al crear el proveedor " + name + ": " + err);
-      });
+      .catch((err) => alert(err));
   };
 
   return (
@@ -110,6 +110,8 @@ function SupplierForm() {
                 type="text"
                 className="form-control mb-2"
                 id="latitude"
+                onChange={(e) => setLatitude(e.target.value)}
+                value={latitude}
                 disabled
               />
               <FormLabel text={"Longitud"} />
@@ -117,6 +119,8 @@ function SupplierForm() {
                 type="text"
                 className="form-control mb-2"
                 id="longitude"
+                onChange={(e) => setLongitude(e.target.value)}
+                value={longitude}
                 disabled
               />
               <FormLabel text={"Departamento"} /> <SpanMandatory />
