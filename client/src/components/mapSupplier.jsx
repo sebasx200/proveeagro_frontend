@@ -35,5 +35,21 @@ const Map = ({ onMapClick }) => {
   );
 };
 
-export default Map;
+const LocationMap = ({ lat, lng, popupText }) => {
+  return (
+    <MapContainer center={[lat, lng]} zoom={13} style={{ height: "400px", width: "400px" }}>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      />
+      <Marker position={[lat, lng]}>
+        <Popup>
+          {popupText}
+        </Popup>
+      </Marker>
+    </MapContainer>
+  );
+};
+
+export {Map, LocationMap};
 

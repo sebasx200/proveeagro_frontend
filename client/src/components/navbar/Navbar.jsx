@@ -58,9 +58,9 @@ function Navbar() {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Ver mis proveedores
-                  </a>
+                <Link className="dropdown-item" to={"/supplier/suppliers/"}>
+                    Ver proveedores
+                  </Link>
                 </li>
                 <li>
                   <Link className="dropdown-item" to={"/supplier/add-supplier/"}>

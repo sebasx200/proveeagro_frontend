@@ -1,27 +1,92 @@
 import { useState, useEffect } from "react";
-import supplierApi from "../../api/supplierApi";
+import { getSuppliers, getCities } from "../../api/supplierApi";
+import DataTable from "react-data-table-component";
+import { toast } from "react-hot-toast";
+import { LocationMap } from "../mapSupplier";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 function SupplierList() {
   const [suppliers, setSuppliers] = useState([]);
-
-  const getSuppliers = () => {
-    supplierApi
-      .get("/supplier/suppliers")
-      .then((res) => res.data)
-      .then((data) => {
-        setSuppliers(data);
-        console.log(data);
-      })
-      .catch((error) => alert("Error al cargar los proveedores"));
-  };
+  const [cities, setCities] = useState([]);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
-    getSuppliers();
+    // function to fetch the data
+    async function fetchData() {
+      try {
+        const responseSuppliers = await getSuppliers();
+        setSuppliers(responseSuppliers.data);
+        const responseCities = await getCities();
+        setCities(responseCities.data);
+      } catch (error) {
+        toast.error("Error al cargar los datos " + error.message, {
+          duration: 5000,
+        });
+      }
+    }
+    // call the function
+    fetchData();
   }, []);
 
+  const columns = [
+    {
+      name: "Nombre",
+      selector: (row) => row.name,
+    },
+    {
+      name: "Dirección",
+      selector: (row) => row.location.address,
+    },
+  ];
+
+  const handleRowClick = (row) => {
+    setSelectedSupplier(row);
+    setModalIsOpen(true);
+  };
+
   return (
-    <div>
-      <h2>Suppliers</h2>
+    <div className="row mt-5">
+      <h2>Proveeadores registrados</h2>
+      <DataTable
+        columns={columns}
+        data={suppliers}
+        selectableRows
+        selectableRowsHighlight
+        onRowClicked={handleRowClick}
+        pagination
+        highlightOnHover
+        pointerOnHover
+        striped
+      />
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        contentLabel="Selected Supplier"
+      >
+        {selectedSupplier && (
+          <div>
+            <h2>Detalles proveedor seleccionado</h2>
+            <p>Nombre: {selectedSupplier.name}</p>
+            <p>Dirección: {selectedSupplier.location.address}</p>
+            <p>Ciudad: {selectedSupplier.location.city.name}</p>
+            <h2>Ubicación</h2>
+            <LocationMap
+              lat={selectedSupplier.location.latitude}
+              lng={selectedSupplier.location.longitude}
+              popupText={selectedSupplier.location.address}
+            />
+            <button
+              className="btn btn-close"
+              onClick={() => setModalIsOpen(false)}
+              style={{ position: "absolute", top: "10px", right: "10px" }}
+            >
+            </button>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
