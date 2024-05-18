@@ -9,10 +9,9 @@ import userApi from "../../api/userApi";
 // import components
 import {
   FormPanel,
-  DivInput,
   ToggleButton,
   FormButton,
-  FormLabel,
+  FormLogo,
 } from "../ui/FormComponents";
 
 function FormRegister() {
@@ -47,108 +46,134 @@ function FormRegister() {
   return (
     <FormPanel>
       <div className="col-md-6 mb-6">
-        <img
-          src="/img/form-img/logo_proveeagro-bg3.png"
-          alt="Logo"
-          className="img-fluid"
-        />
-        <p className="text-body-secondary text-center mt-4 mb-2">
-          © Proveeagro 2024
-        </p>
+        {/* logo */}
+        <FormLogo src={"/img/form-img/logo_proveeagro-bg3.png"} />
       </div>
       <div className="col-md-6">
         <form onSubmit={onSubmit}>
           <div className="panel-heading">
             <h3 className="pt-3 font-weight-bold text-center">Registrarse</h3>
           </div>
-          <DivInput>
-            <i className="bi bi-person-fill text-success me-2"></i>
-            <input
-              id="username"
-              type="text"
-              className="form-control"
-              name="username"
-              placeholder="Tu usuario"
-              {...register("username", { required: true })}
-              required
-            />
-            <FormLabel text={"Nuevo usuario"} />
-          </DivInput>
-          <DivInput>
-            <i className="bi bi-lock-fill text-success me-2"></i>
-            <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              className="form-control"
-              name="password"
-              placeholder="Contraseña"
-              {...register("password", { required: true })}
-              required
-            />
-            <ToggleButton
-              itemID="passwordButton"
-              togglePasswordVisibility={togglePasswordVisibility}
-              showPassword={showPassword}
-            />
-            <FormLabel text={"Nueva contraseña"} />
-          </DivInput>
-          <DivInput>
-            <i className="bi bi-lock-fill text-success me-2"></i>
-            <input
-              id="password2"
-              type={showPassword ? "text" : "password"}
-              className="form-control"
-              name="password2"
-              placeholder="Contraseña"
-              {...register("password2", { required: true })}
-              required
-            />
-            <ToggleButton
-              itemID="passwordButton"
-              togglePasswordVisibility={togglePasswordVisibility}
-              showPassword={showPassword}
-            />
-            <FormLabel text={"Confirmar contraseña"} />
-          </DivInput>
-          <DivInput>
-            <i className="bi bi-envelope-at-fill text-success me-2"></i>
-            <input
-              id="email"
-              type="email"
-              className="form-control"
-              name="email"
-              placeholder="Tu correo electrónico"
-              {...register("email", { required: true })}
-              required
-            />
-            <FormLabel text={"Nuevo correo electrónico"} />
-          </DivInput>
-          <DivInput>
-            <i className="bi bi-person-lines-fill text-success me-2"></i>
-            <input
-              id="first_name"
-              type="text"
-              className="form-control"
-              name="first_name"
-              placeholder="Nombre"
-              {...register("first_name", { required: true })}
-              required
-            />
-            <FormLabel text={"Ingresa tu nombre"} />
-          </DivInput>
-          <DivInput>
-            <i className="bi bi-person-lines-fill text-success me-2"></i>
-            <input
-              id="last_name"
-              type="text"
-              className="form-control"
-              name="last_name"
-              placeholder="Apellido"
-              {...register("last_name", { required: true })}
-              required
-            />
-            <FormLabel text={"Ingresa tu apellido"} />
-          </DivInput>
+          {/* input fields */}
+          <div className="input-group mb-2">
+            <span className="input-group-text" id="basic-addon1">
+              <i className="bi bi-person-fill text-success"></i>
+            </span>
+            <div className="form-floating">
+              <input
+                id="username"
+                type="text"
+                className="form-control"
+                name="username"
+                placeholder="Tu usuario"
+                {...register("username", { required: true })}
+                required
+              />
+              <label htmlFor="username">Usuario</label>
+            </div>
+          </div>
+
+          <div className="input-group mb-2">
+            <span className="input-group-text" id="basic-addon1">
+              <i className="bi bi-lock-fill text-success"></i>
+            </span>
+            <div className="form-floating">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                className="form-control"
+                name="password"
+                placeholder="Contraseña"
+                {...register("password", { required: true })}
+                required
+              />
+              <label htmlFor="password">Contraseña</label>
+
+              <ToggleButton
+                itemID="passwordButton"
+                togglePasswordVisibility={togglePasswordVisibility}
+                showPassword={showPassword}
+              />
+            </div>
+          </div>
+          <div className="input-group mb-2">
+            <span className="input-group-text" id="basic-addon1">
+              <i className="bi bi-lock-fill text-success"></i>
+            </span>
+            <div className="form-floating">
+              <input
+                id="password2"
+                type={showPassword ? "text" : "password"}
+                className="form-control"
+                name="password2"
+                placeholder="Contraseña"
+                {...register("password2", { required: true })}
+                required
+              />
+              <ToggleButton
+                itemID="passwordButton"
+                togglePasswordVisibility={togglePasswordVisibility}
+                showPassword={showPassword}
+              />
+              <label htmlFor="password2">Repite la contraseña</label>
+            </div>
+          </div>
+
+          <div className="input-group mb-2">
+            <span className="input-group-text" id="basic-addon1">
+              
+          <i className="bi bi-envelope-at-fill text-success"></i>
+          </span>
+          <div className="form-floating">
+          <input
+            id="email"
+            type="email"
+            className="form-control"
+            name="email"
+            placeholder="Tu correo electrónico"
+            {...register("email", { required: true })}
+            required
+          />
+          <label htmlFor="email">Correo electrónico</label>
+          </div>
+          </div>
+
+          <div className="input-group mb-2">
+            <span className="input-group-text" id="basic-addon1">
+          <i className="bi bi-person-lines-fill text-success"></i>
+          </span>
+          <div className="form-floating">
+          <input
+            id="first_name"
+            type="text"
+            className="form-control"
+            name="first_name"
+            placeholder="Nombre"
+            {...register("first_name", { required: true })}
+            required
+          />
+          <label htmlFor="first_name">Ingresa tu nombre</label>
+          </div>
+          </div>
+
+          <div className="input-group mb-2">
+            <span className="input-group-text" id="basic-addon1">
+          <i className="bi bi-person-lines-fill text-success"></i>
+          </span>
+          <div className="form-floating">
+          <input
+            id="last_name"
+            type="text"
+            className="form-control"
+            name="last_name"
+            placeholder="Apellido"
+            {...register("last_name", { required: true })}
+            required
+          />
+          <label htmlFor="last_name">Ingresa tu apellido</label>
+          </div>
+          </div>
+          
           <div className="container text-center mt-4 mb-2">
             <FormButton
               type="submit"

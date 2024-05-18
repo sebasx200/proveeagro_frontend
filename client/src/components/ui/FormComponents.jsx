@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./FormComponents.module.css";
 
 function ToggleButton({ itemID, togglePasswordVisibility, showPassword }) {
   return (
@@ -24,30 +25,34 @@ function FormButton({ itemID, text, className }) {
   );
 }
 
-function FormLabel({ text }) {
-  return <label className="form-labels">{text}</label>;
-}
-
 function FormPanel({ children }) {
   return (
-    <div className="container-fluid">
+    <div className="container">
       <div
-        className="row justify-content-center align-items-center"
-        style={{ minHeight: "100vh" }}>
-        <div className="col-md-8 panel">
-          <div className="row">{children}</div>
-        </div>
+        className={`row container d-flex justify-content-center align-items-center mt-5 ${styles.panel}`}
+      >
+        {children}
       </div>
     </div>
   );
 }
-
-function DivInput({ children }) {
-  return <div className="form-floating mb-2">{children}</div>;
-}
-
 function SpanMandatory() {
   return <span className="text-danger">*</span>;
 }
 
-export { FormPanel, DivInput, ToggleButton, FormButton, FormLabel, SpanMandatory };
+function FormLogo({src}) {
+  return (
+    <div>
+      <img
+        src={src}
+        alt="Logo"
+        className="img-fluid"
+      />
+      <p className="text-body-secondary text-center mt-4 mb-2">
+        © Proveeagro 2024
+      </p>
+    </div>
+  );
+}
+
+export { FormPanel, ToggleButton, FormButton, SpanMandatory, FormLogo };

@@ -12,6 +12,7 @@ import Navbar from "./components/navbar/Navbar";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import "./index.css";
 
 function Logout() {
   localStorage.clear();
