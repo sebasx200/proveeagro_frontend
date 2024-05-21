@@ -8,11 +8,10 @@ import Suppliers from "./pages/suppliers/Suppliers";
 import AddSupplier from "./pages/suppliers/AddSupplier";
 import Farms from "./pages/farms/Farms";
 import NotFound from "./pages/NotFound";
-import Navbar from "./components/navbar/Navbar";
+import Navbar from "./components/ui/Navbar";
+import Footer from "./components/ui/Footer";
 
 import ProtectedRoute from "./components/ProtectedRoute";
-
-import "./index.css";
 
 function Logout() {
   localStorage.clear();
@@ -27,18 +26,17 @@ function RegisterAndLogout() {
 function App() {
   return (
     <BrowserRouter>
-    <Navbar />
-    <div className="container">
+      <Navbar />
       <Routes>
         <Route
           path="/"
           element={
             <ProtectedRoute>
               <Home />
-            </ProtectedRoute> 
+            </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/supplier/suppliers/"
           element={
@@ -69,7 +67,7 @@ function App() {
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
       <Toaster />
-    </div>
+      <Footer />
     </BrowserRouter>
   );
 }

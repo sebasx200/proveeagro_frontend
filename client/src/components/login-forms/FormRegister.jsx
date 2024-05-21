@@ -14,6 +14,8 @@ import {
   FormLogo,
 } from "../ui/FormComponents";
 
+import styles from "../ui/FormComponents.module.css";
+
 function FormRegister() {
   const {
     register,
@@ -178,7 +180,7 @@ function FormRegister() {
             <FormButton
               type="submit"
               text={loading ? "Cargando..." : "Registrarse"}
-              className="btn btn-success"
+              className={`btn btn-success ${styles.loginButton} ${styles.loginButtonHover}`}
             />
           </div>
           {serverError &&

@@ -7,7 +7,7 @@ function ToggleButton({ itemID, togglePasswordVisibility, showPassword }) {
       itemID={itemID}
       type="button"
       onClick={togglePasswordVisibility}
-      className="btn btn-success text-muted position-absolute top-50 end-0 translate-middle-y me-2"
+      className={`btn btn-success text-muted position-absolute top-50 end-0 translate-middle-y me-2 ${styles.loginButtonHover}`}
     >
       <span
         id="passwordIcon"

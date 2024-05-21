@@ -13,6 +13,8 @@ import {
   FormLogo,
 } from "../ui/FormComponents";
 
+import styles from "../ui/FormComponents.module.css";
+
 function FormLogin({ route }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -119,7 +121,7 @@ function FormLogin({ route }) {
           <div className="container text-center mt-4 mb-2">
             <FormButton
               text={loading ? "Cargando..." : "Ingresar"}
-              className="btn btn-success login-button"
+              className={`btn btn-success ${styles.loginButton} ${styles.loginButtonHover}`}
             />
           </div>
           {/* register link */}

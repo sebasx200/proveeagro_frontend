@@ -5,3 +5,12 @@
     padding: 20px;
     margin: auto;
 }
+
+.loginButton {
+    border-radius: 10px;
+    width: 55%;
+}
+.loginButtonHover:hover {
+    background-color: white;
+    color: green;
+}

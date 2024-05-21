@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { getDepartments, getCities, addSupplier } from "../../api/supplierApi";
-import { FormLabel, SpanMandatory, FormButton } from "../ui/FormComponents";
+import { SpanMandatory, FormButton } from "../ui/FormComponents";
 import { toast } from "react-hot-toast";
 import { Map } from "../mapSupplier";
 
@@ -87,7 +87,7 @@ function SupplierForm() {
           <h3>Añadir nuevo proveedor</h3>
           <form onSubmit={createSupplier}>
             <div className="form-group">
-              <FormLabel text={"Nombre"} /> <SpanMandatory />
+              <label htmlFor="name">Usuario</label><SpanMandatory />
               <input
                 type="text"
                 className="form-control mb-2"
@@ -96,7 +96,7 @@ function SupplierForm() {
                 value={name}
                 required
               />
-              <FormLabel text={"Dirección"} /> <SpanMandatory />
+              <label htmlFor="address">Usuario</label> <SpanMandatory />
               <input
                 type="text"
                 className="form-control mb-2"
@@ -105,7 +105,7 @@ function SupplierForm() {
                 value={address}
                 required
               />
-              <FormLabel text={"Latitud"} />
+              <label htmlFor="latitude">Latitud</label>
               <input
                 type="text"
                 className="form-control mb-2"
@@ -114,7 +114,7 @@ function SupplierForm() {
                 value={latitude}
                 disabled
               />
-              <FormLabel text={"Longitud"} />
+              <label htmlFor="longitude">Longitud</label>
               <input
                 type="text"
                 className="form-control mb-2"
@@ -123,7 +123,7 @@ function SupplierForm() {
                 value={longitude}
                 disabled
               />
-              <FormLabel text={"Departamento"} /> <SpanMandatory />
+              <label htmlFor="department">Usuario</label> <SpanMandatory />
               <select
                 className="form-select mb-2"
                 id="department"
@@ -136,7 +136,7 @@ function SupplierForm() {
                   </option>
                 ))}
               </select>
-              <FormLabel text={"Ciudad"} /> <SpanMandatory />
+              <label htmlFor="city">Usuario</label> <SpanMandatory />
               <select
                 className="form-select mb-2"
                 id="city"
