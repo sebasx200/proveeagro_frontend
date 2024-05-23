@@ -8,7 +8,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg bg-success navbar-dark">
       <div className="container">
         <Link to={"/"} className="navbar-brand">
-            ProveeAgro
+          ProveeAgro
         </Link>
         <button
           className="navbar-toggler"
@@ -22,8 +22,9 @@ function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
+          {/* if the user is authorized, show the following links */}
           <ul className="navbar-nav">
-          <li className="nav-item dropdown">
+            <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
                 href="#"
@@ -58,34 +59,38 @@ function Navbar() {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                <Link className="dropdown-item" to={"/supplier/suppliers/"}>
+                  <Link className="dropdown-item" to={"/supplier/suppliers/"}>
                     Ver proveedores
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to={"/supplier/add-supplier/"}>
+                  <Link
+                    className="dropdown-item"
+                    to={"/supplier/add-supplier/"}
+                  >
                     Añadir un proveedor
                   </Link>
                 </li>
               </ul>
             </li>
           </ul>
-            <ul className="navbar-nav ms-auto">
+          {/* if the user is not authorized, show the following links */}
+          <ul className="navbar-nav ms-auto">
                 <li className="nav-item">
-                <Link to="/login" className="nav-link">
+                  <Link to="/login" className="nav-link">
                     Iniciar sesión
-                </Link>
+                  </Link>
                 </li>
                 <li className="nav-item">
-                <Link to="/register" className="nav-link">
+                  <Link to="/register" className="nav-link">
                     Registrarse
-                </Link>
+                  </Link>
                 </li>
-            </ul>
+          </ul>
         </div>
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

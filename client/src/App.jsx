@@ -26,6 +26,7 @@ function RegisterAndLogout() {
 function App() {
   return (
     <BrowserRouter>
+    <div className="App">
       <Navbar />
       <Routes>
         <Route
@@ -68,6 +69,7 @@ function App() {
       </Routes>
       <Toaster />
       <Footer />
+    </div>
     </BrowserRouter>
   );
 }
