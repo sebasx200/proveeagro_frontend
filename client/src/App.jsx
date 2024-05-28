@@ -10,6 +10,7 @@ import Farms from "./pages/farms/Farms";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/ui/Navbar";
 import Footer from "./components/ui/Footer";
+import { UserProvider } from "./components/UserContext";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -25,6 +26,7 @@ function RegisterAndLogout() {
 
 function App() {
   return (
+    <UserProvider>
     <BrowserRouter>
     <div className="App">
       <Navbar />
@@ -71,6 +73,7 @@ function App() {
       <Footer />
     </div>
     </BrowserRouter>
+    </UserProvider>
   );
 }
 

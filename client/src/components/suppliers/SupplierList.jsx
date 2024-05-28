@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getSuppliers, getCities } from "../../api/supplierApi";
 import DataTable from "react-data-table-component";
 import { toast } from "react-hot-toast";
-import { LocationMap } from "../mapSupplier";
+import { LocationMap } from "../Maps";
 import Modal from "react-modal";
 
 Modal.setAppElement("#root");

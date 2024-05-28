@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { getDepartments, getCities, addSupplier } from "../../api/supplierApi";
 import { SpanMandatory, FormButton } from "../ui/FormComponents";
 import { toast } from "react-hot-toast";
-import { Map } from "../mapSupplier";
+import { Map } from "../Maps";
 
 import { supplierApi } from "../../api/supplierApi";
 

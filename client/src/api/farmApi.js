@@ -7,6 +7,6 @@ const farmApi = axios.create({
 
 applyAuthInterceptor(farmApi);
 
-export const getFarms = () => farmApi.get("/farm/list/");
-export const addFarm = (data) => farmApi.post("/farm/list/", data);
+export const getFarms = () => farmApi.get("/farm/farms/");
+export const addFarm = (data) => farmApi.post("/farm/farms/", data);
 export { farmApi }

@@ -4,6 +4,7 @@ import { Form, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 import { toast } from "react-hot-toast";
+import { useUser } from '../UserContext';
 
 // import components
 import {
@@ -20,6 +21,7 @@ function FormLogin({ route }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { login } = useUser();
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -35,6 +37,7 @@ function FormLogin({ route }) {
 
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+      login();
       toast.success("Bienvenido a Proveeagro " + username);
       navigate("/");
     } catch (error) {

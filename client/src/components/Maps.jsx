@@ -1,7 +1,9 @@
+// these are the map components that are use for the forms and the list of farms and suppliers
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// Map component to show a map and handle the click event to get the coordinates
 const Map = ({ onMapClick }) => {
   const locationMedellin = [6.25184, -75.56359];
   const [markerPosition, setMarkerPosition] = useState(null);
@@ -35,6 +37,7 @@ const Map = ({ onMapClick }) => {
   );
 };
 
+// LocationMap component to show a map with a marker in a specific location
 const LocationMap = ({ lat, lng, popupText }) => {
   return (
     <MapContainer center={[lat, lng]} zoom={13} style={{ height: "400px", width: "400px" }}>

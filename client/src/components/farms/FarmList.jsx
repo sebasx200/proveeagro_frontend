@@ -1,50 +1,39 @@
 import { useState, useEffect } from "react";
 import { addFarm, getFarms } from "../../api/farmApi";
 import { toast } from "react-hot-toast";
-import { LocationMap } from "../mapSupplier";
-import Modal from "react-modal";
+import { Card, Row, Col } from "react-bootstrap";
 
 function FarmList() {
-    const [farms, setFarms] = useState([]);
-    const [cities, setCities] = useState([]);
-    const [selectedFarm, setSelectedFarm] = useState(null);
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [farms, setFarms] = useState([]);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const responseFarms = await getFarms();
-                setFarms(responseFarms.data);
-            } catch (error) {
-                toast.error("Error al cargar los datos " + error.message, {
-                    duration: 5000,
-                });
-            }
-        }
-        fetchData();
-    }, []);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const responseFarms = await getFarms();
+        setFarms(responseFarms.data);
+      } catch (error) {
+        toast.error("Error al cargar los datos " + error.message, {
+          duration: 5000,
+        });
+      }
+    }
+    fetchData();
+  }, []);
 
-    return (
-        <div className="row mt-5">
-            <h2>Mis fincas</h2>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Dirección</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {farms.map((farm) => (
-                        <tr key={farm.id} onClick={() => setSelectedFarm(farm)}>
-                            <td>{farm.name}</td>
-                            <td>{farm.location.address}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+  return (
+    <div className="row">
+      {farms.map((farm, index) => (
+        <div className="col-md-4" key={index}>
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">{farm.name}</h5>
+              <p className="card-text">{farm.location.address}</p>
+            </div>
+          </div>
         </div>
-    );
+      ))}
+    </div>
+  );
 }
 
 export default FarmList;
