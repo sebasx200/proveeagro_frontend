@@ -1,0 +1,16 @@
+.supplierPage{
+    background-image: url('./img/img5.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    
+    
+}
+
+.addSupplierPage{
+    background-image: url('./img/img9.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+
+}

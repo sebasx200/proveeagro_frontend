@@ -1,9 +1,14 @@
 import FarmList from "../../components/farms/FarmList";
+import styles from "./Farms.module.css";
 
 function Farms() {
     return (
-        <div className="container">
+        <div className={`pb-5 ${styles.farmPage}`}>
+            <div className="container">
+                
+           
             <FarmList />
+            </div>
         </div>
     );
 }

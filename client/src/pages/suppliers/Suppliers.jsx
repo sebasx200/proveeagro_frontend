@@ -1,11 +1,14 @@
 import SupplierList from "../../components/suppliers/SupplierList";
+import styles from "./Suppliers.module.css";
 
 function Suppliers() {
     return (
-        <div>
-        <SupplierList />
+        <div className={`pb-5 ${styles.supplierPage}`}>
+            <div className="container">
+                <SupplierList />
+            </div>
         </div>
     );
-    }
+}
 
 export default Suppliers;

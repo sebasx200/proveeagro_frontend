@@ -33,11 +33,11 @@ function SupplierList() {
 
   const columns = [
     {
-      name: "Nombre",
+      name: "NOMBRE",
       selector: (row) => row.name,
     },
     {
-      name: "Dirección",
+      name: "DIRECCIÓN",
       selector: (row) => row.location.address,
     },
   ];
@@ -48,12 +48,12 @@ function SupplierList() {
   };
 
   return (
-    <div className="row mt-5">
-      <h2>Proveeadores registrados</h2>
+    <div className=" mt-5">
+      
       <DataTable
         columns={columns}
         data={suppliers}
-        selectableRows
+        title="Proveedores registrados"
         selectableRowsHighlight
         onRowClicked={handleRowClick}
         pagination

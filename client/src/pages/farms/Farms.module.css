@@ -1,0 +1,8 @@
+.farmPage{
+    background-image: url('./img/img4.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    color: white;
+    
+}
