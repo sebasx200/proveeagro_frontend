@@ -87,7 +87,7 @@ function SupplierForm() {
           <h3>Añadir nuevo proveedor</h3>
           <form onSubmit={createSupplier}>
             <div className="form-group">
-              <label htmlFor="name">Usuario</label><SpanMandatory />
+              <label htmlFor="name">Nombre</label><SpanMandatory />
               <input
                 type="text"
                 className="form-control mb-2"
@@ -96,7 +96,7 @@ function SupplierForm() {
                 value={name}
                 required
               />
-              <label htmlFor="address">Usuario</label> <SpanMandatory />
+              <label htmlFor="address">Dirección</label> <SpanMandatory />
               <input
                 type="text"
                 className="form-control mb-2"
@@ -123,7 +123,7 @@ function SupplierForm() {
                 value={longitude}
                 disabled
               />
-              <label htmlFor="department">Usuario</label> <SpanMandatory />
+              <label htmlFor="department">Departamento</label> <SpanMandatory />
               <select
                 className="form-select mb-2"
                 id="department"
@@ -136,7 +136,7 @@ function SupplierForm() {
                   </option>
                 ))}
               </select>
-              <label htmlFor="city">Usuario</label> <SpanMandatory />
+              <label htmlFor="city">Ciudad</label> <SpanMandatory />
               <select
                 className="form-select mb-2"
                 id="city"
