@@ -82,7 +82,7 @@ function SupplierForm() {
 
   return (
     <div className="container mt-5">
-      <div className="row bg-body-tertiary">
+      <div className="row text-white">
         <div className="col-md-4">
           <h3>Añadir nuevo proveedor</h3>
           <form onSubmit={createSupplier}>
@@ -96,7 +96,7 @@ function SupplierForm() {
                 value={name}
                 required
               />
-              <label htmlFor="address">Dirección</label> <SpanMandatory />
+              <label className="form-label" htmlFor="address">Dirección</label> <SpanMandatory />
               <input
                 type="text"
                 className="form-control mb-2"
@@ -160,7 +160,7 @@ function SupplierForm() {
             </div>
           </form>
         </div>
-        <div className="col-md-8">
+        <div className="col-md-7">
           <h3>Mapa</h3>
           <Map onMapClick={handleMapClick} />
         </div>

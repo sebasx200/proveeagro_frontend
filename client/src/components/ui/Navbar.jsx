@@ -44,9 +44,9 @@ function Navbar() {
                     </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
-                      Añadir finca
-                    </a>
+                  <Link className="dropdown-item" to={"/farm/add-farm/"}>
+                    Añadir finca
+                    </Link>
                   </li>
                 </ul>
               </li>

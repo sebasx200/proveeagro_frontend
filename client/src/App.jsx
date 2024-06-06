@@ -7,6 +7,7 @@ import Home from "./pages/dashboard/Home";
 import Suppliers from "./pages/suppliers/Suppliers";
 import AddSupplier from "./pages/suppliers/AddSupplier";
 import Farms from "./pages/farms/Farms";
+import AddFarm from "./pages/farms/AddFarm";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/ui/Navbar";
 import Footer from "./components/ui/Footer";
@@ -61,6 +62,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Farms />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/farm/add-farm/"
+          element={
+            <ProtectedRoute>
+              <AddFarm />
             </ProtectedRoute>
           }
         />

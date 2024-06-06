@@ -25,7 +25,8 @@ function FarmList() {
       {farms.map((farm, index) => (
         <div className="col-md-4" key={index}>
           <div className="card">
-            <div className="card-body">
+            <div className="card-body justify-content-center ">
+              <img src="/img/form-img/logo_proveeagro-bg4.png" alt="finca" width="200" />
               <h5 className="card-title">{farm.name}</h5>
               <p className="card-text">{farm.location.address}</p>
             </div>

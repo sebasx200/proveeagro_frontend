@@ -3,6 +3,13 @@
     background-size: cover;
     background-position: center;
     min-height: 100vh;
-    color: white;
     
+}
+
+.farmForm{
+    background-image: url('./img/imgAddFinca.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+
 }
