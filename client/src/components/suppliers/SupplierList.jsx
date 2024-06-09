@@ -65,25 +65,37 @@ function SupplierList() {
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         contentLabel="Selected Supplier"
+        style={{
+          content: {
+            width: "60%",
+            height: "60%",
+            margin: "auto",
+          },
+        }}
       >
-        {selectedSupplier && (
-          <div>
-            <h2>Detalles proveedor seleccionado</h2>
-            <p>Nombre: {selectedSupplier.name}</p>
-            <p>Dirección: {selectedSupplier.location.address}</p>
-            <p>Ciudad: {selectedSupplier.location.city.name}</p>
-            <h2>Ubicación</h2>
-            <LocationMap
-              lat={selectedSupplier.location.latitude}
-              lng={selectedSupplier.location.longitude}
-              popupText={selectedSupplier.location.address}
-            />
-            <button
+          <button
               className="btn btn-close"
               onClick={() => setModalIsOpen(false)}
               style={{ position: "absolute", top: "10px", right: "10px" }}
             >
             </button>
+        {selectedSupplier && (
+          <div className="row">
+            <div className="col-md-6">
+            <h2>Detalles proveedor seleccionado</h2>
+            <p>Nombre: {selectedSupplier.name}</p>
+            <p>Dirección: {selectedSupplier.location.address}</p>
+            <p>Ciudad: {selectedSupplier.location.city.name}</p>
+            </div>
+            <div className="col-md-6">
+            <h2>Ubicación</h2>
+          
+            <LocationMap
+              lat={selectedSupplier.location.latitude}
+              lng={selectedSupplier.location.longitude}
+              popupText={selectedSupplier.location.address}
+            />
+            </div>
           </div>
         )}
       </Modal>

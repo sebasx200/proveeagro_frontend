@@ -27,6 +27,16 @@ function Navbar() {
           {/* if the user is authorized, show the following links */}
           {user && (
             <ul className="navbar-nav">
+              <li className="nav-item">
+                <Link to={"/"} className="nav-link">
+                  Inicio
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/agenda"} className="nav-link">
+                  Mi agenda
+                </Link>
+              </li>
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"

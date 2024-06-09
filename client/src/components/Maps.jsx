@@ -40,7 +40,7 @@ const Map = ({ onMapClick }) => {
 // LocationMap component to show a map with a marker in a specific location
 const LocationMap = ({ lat, lng, popupText }) => {
   return (
-    <MapContainer center={[lat, lng]} zoom={13} style={{ height: "400px", width: "400px" }}>
+    <MapContainer center={[lat, lng]} zoom={13} style={{ height: "250px", width: "250px" }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

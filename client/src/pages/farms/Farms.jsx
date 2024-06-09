@@ -4,7 +4,7 @@ import styles from "./Farms.module.css";
 function Farms() {
     return (
         <div className={`pb-5 ${styles.farmPage}`}>
-            <div className="container">
+            <div className="container mt-5">
                 
            
             <FarmList />
