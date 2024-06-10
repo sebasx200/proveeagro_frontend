@@ -35,7 +35,7 @@ function FarmList() {
       {farms.map((farm, index) => (
         <div className="col-md-4" key={index}>
           <div
-            className={`card justify-content-center align-items-center ${styles.cardPanel}`}
+            className={`card justify-content-center align-items-center mb-5 ${styles.cardPanel}`}
             onClick={() => onCardClick(farm)}
           >
             <div className="card-body">

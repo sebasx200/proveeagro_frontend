@@ -11,8 +11,8 @@ import styles from "../../pages/farms/Farms.module.css";
 function FarmForm() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const [city, setCity] = useState("");
   const [departments, setDepartments] = useState([]);
   const [cities, setCities] = useState([]);
@@ -59,25 +59,36 @@ function FarmForm() {
     setLatitude(latlng.lat);
     setLongitude(latlng.lng);
   };
-
   // function to create a new farm
   const createFarm = (e) => {
     e.preventDefault();
-    farmApi
-      .post("/farm/farms/", {
-        name,
-        location: {
-          address,
-          latitude,
-          longitude,
-          city,
-        },
-      })
-      .then((res) => {
-        if (res.status === 201) toast.success("El proveedor " + name + " ha sido creado correctamente.");
-        else toast.error("Error al crear el proveedor " + name);
-      })
-      
+    if (latitude === null || longitude === null) {
+      const userConfirmation = window.confirm(
+        "No has seleccionado la ubicación en el mapa. ¿Deseas continuar de todas formas?"
+      );
+      if (userConfirmation) {
+        farmApi
+          .post("/farm/farms/", {
+            name,
+            location: {
+              address,
+              latitude,
+              longitude,
+              city,
+            },
+          })
+          .then((res) => {
+            if (res.status === 201)
+              toast.success(
+                "La finca" + name + " ha sido creado correctamente."
+              );
+            else toast.error("Error al crear la finca " + name);
+          })
+          .catch((error) => alert("Error al añadir la finca " + error.message));
+      } else {
+        return;
+      }
+    }
   };
 
   return (
