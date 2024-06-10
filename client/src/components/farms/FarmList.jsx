@@ -34,10 +34,17 @@ function FarmList() {
     <div className="row">
       {farms.map((farm, index) => (
         <div className="col-md-4" key={index}>
-          <div className={`card justify-content-center align-items-center ${styles.cardPanel}`} onClick={() => onCardClick(farm)}>
+          <div
+            className={`card justify-content-center align-items-center ${styles.cardPanel}`}
+            onClick={() => onCardClick(farm)}
+          >
             <div className="card-body">
-            <img src="/img/form-img/logo_proveeagro-bg4.png" alt="finca" width="200" />
-            <h4 className="card-title text-center">{farm.name}</h4>
+              <img
+                src="/img/form-img/logo_proveeagro-bg4.png"
+                alt="finca"
+                width="200"
+              />
+              <h4 className="card-title text-center">{farm.name}</h4>
             </div>
           </div>
         </div>
@@ -47,15 +54,11 @@ function FarmList() {
         onRequestClose={() => setModalIsOpen(false)}
         contentLabel="Selected Supplier"
         style={{
-          
           content: {
             width: "60%",
             height: "60%",
             margin: "auto",
-            backgroundColor: "#4caf50",
-            color: "#fff",  
-            borderRadius: "10px",
-            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+            
           },
         }}
       >
@@ -63,10 +66,8 @@ function FarmList() {
           className="btn btn-close"
           onClick={() => setModalIsOpen(false)}
           style={{ position: "absolute", top: "10px", right: "10px" }}
-        >
+        ></button>
 
-        </button>
-        
         {selectedFarm && (
           <div className="row">
             <div className="col-md-6">
@@ -76,11 +77,19 @@ function FarmList() {
             </div>
             <div className="col-md-6">
               <h4>Ubicación</h4>
-              <LocationMap
-                lat={selectedFarm.location.latitude}
-                lng={selectedFarm.location.longitude}
-                popupText={selectedFarm.location.address}
-              />
+              {selectedFarm.location?.latitude &&
+              selectedFarm.location?.longitude ? (
+                <LocationMap
+                  lat={selectedFarm.location.latitude}
+                  lng={selectedFarm.location.longitude}
+                  popupText={selectedFarm.location.address}
+                />
+              ) : (
+                <p>
+                  Ubicación no disponible: no se han proporcionado las
+                  coordenadas
+                </p>
+              )}
             </div>
           </div>
         )}
