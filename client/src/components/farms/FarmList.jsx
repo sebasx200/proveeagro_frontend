@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { addFarm, getFarms } from "../../api/farmApi";
+import { getFarms, farmApi } from "../../api/farmApi";
 import { toast } from "react-hot-toast";
-import Modal from "react-modal";
-import { LocationMap } from "../Maps";
+import CustomModal from "../CustomModal";
 
 import styles from "../../pages/farms/Farms.module.css";
 
@@ -11,6 +10,7 @@ function FarmList() {
   const [selectedFarm, setSelectedFarm] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
+  // Fetch the data
   useEffect(() => {
     async function fetchData() {
       try {
@@ -25,9 +25,16 @@ function FarmList() {
     fetchData();
   }, []);
 
+  // Function to handle the click on a card
   const onCardClick = (card) => {
     setSelectedFarm(card);
     setModalIsOpen(true);
+  };
+
+  // Function to handle the change on the form to edit the farm
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedFarm({ ...selectedFarm, [name]: value });
   };
 
   return (
@@ -49,51 +56,64 @@ function FarmList() {
           </div>
         </div>
       ))}
-      <Modal
+      <CustomModal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Selected Supplier"
-        style={{
-          content: {
-            width: "60%",
-            height: "60%",
-            margin: "auto",
-            
-          },
+        api={farmApi}
+        endpoint={`/farms/${selectedFarm._id}`}
+        initialData={selectedFarm}
+        onUpdate={(updatedFarm) => {
+          const updatedFarms = farms.map((farm) =>
+            farm._id === updatedFarm._id ? updatedFarm : farm
+          );
+          setFarms(updatedFarms);
         }}
       >
-        <button
-          className="btn btn-close"
-          onClick={() => setModalIsOpen(false)}
-          style={{ position: "absolute", top: "10px", right: "10px" }}
-        ></button>
-
+        {/* Form to edit the farm*/}
         {selectedFarm && (
-          <div className="row">
-            <div className="col-md-6">
-              <h3>{selectedFarm.name}</h3>
-              <p>{selectedFarm.location.address}</p>
-              <p>Ciudad: {selectedFarm.location.city.name}</p>
-            </div>
-            <div className="col-md-6">
-              <h4>Ubicación</h4>
-              {selectedFarm.location?.latitude &&
-              selectedFarm.location?.longitude ? (
-                <LocationMap
-                  lat={selectedFarm.location.latitude}
-                  lng={selectedFarm.location.longitude}
-                  popupText={selectedFarm.location.address}
-                />
-              ) : (
-                <p>
-                  Ubicación no disponible: no se han proporcionado las
-                  coordenadas
-                </p>
-              )}
-            </div>
-          </div>
+          <div>
+          <div className="form-group">
+          <label htmlFor="name">Nombre</label>
+          <input
+            type="text"
+            className="form-control mb-2"
+            id="name"
+            name="name"
+            value={selectedFarm.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="address">Dirección</label>
+          <input
+            type="text"
+            className="form-control mb-2"
+            id="address"
+            name="address"
+            value={selectedFarm.location.address}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="city">Ciudad</label>
+          <input
+            type="text"
+            className="form-control mb-2"
+            id="city"
+            name="city"
+            value={selectedFarm.location.city}
+            onChange={handleChange}
+            required
+          />
+          
+        </div>
+        </div>
         )}
-      </Modal>
+        {/* end of the form */}
+        
+      </CustomModal>
     </div>
   );
 }

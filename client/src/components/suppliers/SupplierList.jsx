@@ -47,16 +47,29 @@ function SupplierList() {
     setModalIsOpen(true);
   };
 
+  const [searchText, setSearchText] = useState("");
+
+  const filteredSuppliers = suppliers.filter((supplier) =>
+    supplier.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <div className=" mt-5">
-      
+      <input
+        className="mb-3"
+        type="text"
+        placeholder="Buscar proveedor"
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+      />
       <DataTable
         columns={columns}
-        data={suppliers}
+        data={filteredSuppliers}
         title="Proveedores registrados"
         selectableRowsHighlight
         onRowClicked={handleRowClick}
         pagination
+        paginationRowsPerPageOptions={[5, 10, 15, 30, 50, 75, 100]}
         highlightOnHover
         pointerOnHover
         striped
@@ -73,28 +86,35 @@ function SupplierList() {
           },
         }}
       >
-          <button
-              className="btn btn-close"
-              onClick={() => setModalIsOpen(false)}
-              style={{ position: "absolute", top: "10px", right: "10px" }}
-            >
-            </button>
+        <button
+          className="btn btn-close"
+          onClick={() => setModalIsOpen(false)}
+          style={{ position: "absolute", top: "10px", right: "10px" }}
+        ></button>
         {selectedSupplier && (
           <div className="row">
             <div className="col-md-6">
-            <h2>Detalles proveedor seleccionado</h2>
-            <p>Nombre: {selectedSupplier.name}</p>
-            <p>Dirección: {selectedSupplier.location.address}</p>
-            <p>Ciudad: {selectedSupplier.location.city.name}</p>
+              <h2>Detalles proveedor seleccionado</h2>
+              <p>Nombre: {selectedSupplier.name}</p>
+              <p>Dirección: {selectedSupplier.location.address}</p>
+              <p>Ciudad: {selectedSupplier.location.city.name}</p>
             </div>
             <div className="col-md-6">
-            <h2>Ubicación</h2>
-          
-            <LocationMap
-              lat={selectedSupplier.location.latitude}
-              lng={selectedSupplier.location.longitude}
-              popupText={selectedSupplier.location.address}
-            />
+              <h2>Ubicación</h2>
+              {/* If the supplier has a location, show the map */}
+              {selectedSupplier.location?.latitude &&
+              selectedSupplier.location?.longitude ? (
+                <LocationMap
+                  lat={selectedSupplier.location.latitude}
+                  lng={selectedSupplier.location.longitude}
+                  popupText={selectedSupplier.location.address}
+                />
+              ) : (
+                <p>
+                  Ubicación no disponible: no se han proporcionado las
+                  coordenadas
+                </p>
+              )}
             </div>
           </div>
         )}

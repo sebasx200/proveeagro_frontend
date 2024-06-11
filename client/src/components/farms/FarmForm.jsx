@@ -7,6 +7,7 @@ import { Map } from "../Maps";
 import { SpanMandatory, FormButton } from "../ui/FormComponents";
 
 import styles from "../../pages/farms/Farms.module.css";
+import { set } from "react-hook-form";
 
 function FarmForm() {
   const [name, setName] = useState("");
@@ -78,11 +79,16 @@ function FarmForm() {
             },
           })
           .then((res) => {
-            if (res.status === 201)
+            if (res.status === 201) {
               toast.success(
-                "La finca" + name + " ha sido creado correctamente."
+                "La finca " + name + " ha sido creado correctamente."
               );
-            else toast.error("Error al crear la finca " + name);
+              setName("");
+              setAddress("");
+              setLatitude(null);
+              setLongitude(null);
+              setCity("");
+            } else toast.error("Error al crear la finca " + name);
           })
           .catch((error) => alert("Error al añadir la finca " + error.message));
       } else {

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { getDepartments, getCities, addSupplier } from "../../api/supplierApi";
 import { SpanMandatory, FormButton } from "../ui/FormComponents";
 import { toast } from "react-hot-toast";
@@ -8,12 +8,14 @@ import { Map } from "../Maps";
 
 import { supplierApi } from "../../api/supplierApi";
 
+import styles from "../../pages/suppliers/Suppliers.module.css";
+
 function SupplierForm() {
   // states to store the departments and cities
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const [city, setCity] = useState("");
   const [departments, setDepartments] = useState([]);
   const [cities, setCities] = useState([]);
@@ -63,31 +65,50 @@ function SupplierForm() {
 
   const createSupplier = (e) => {
     e.preventDefault();
-    supplierApi
-      .post("/supplier/suppliers/", {
-        name,
-        location: {
-          address,
-          latitude,
-          longitude,
-          city,
-        },
-      })
-      .then((res) => {
-        if (res.status === 201) toast.success("El proveedor " + name + " ha sido creado correctamente.");
-        else toast.error("Error al crear el proveedor " + name);
-      })
-      .catch((err) => alert(err));
+    if (latitude === null || longitude === null) {
+      const userConfirmation = window.confirm(
+        "No has seleccionado la ubicación en el mapa. ¿Deseas continuar de todas formas?"
+      );
+      if (userConfirmation) {
+        supplierApi
+          .post("/supplier/suppliers/", {
+            name,
+            location: {
+              address,
+              latitude,
+              longitude,
+              city,
+            },
+          })
+          .then((res) => {
+            if (res.status === 201){
+              toast.success(
+                "El proveedor " + name + " ha sido creado correctamente."
+              );
+              setName("");
+              setAddress("");
+              setLatitude(null);
+              setLongitude(null);
+              setCity("");
+            }
+            else toast.error("Error al crear el proveedor " + name);
+          })
+          .catch((err) => alert(err));
+      } else {
+        return;
+      }
+    }
   };
 
   return (
     <div className="container mt-5">
-      <div className="row text-white">
+      <div className={`row p-3 ${styles.formPanel}`}>
         <div className="col-md-4">
           <h3>Añadir nuevo proveedor</h3>
           <form onSubmit={createSupplier}>
             <div className="form-group">
-              <label htmlFor="name">Nombre</label><SpanMandatory />
+              <label htmlFor="name">Nombre</label>
+              <SpanMandatory />
               <input
                 type="text"
                 className="form-control mb-2"
@@ -96,7 +117,10 @@ function SupplierForm() {
                 value={name}
                 required
               />
-              <label className="form-label" htmlFor="address">Dirección</label> <SpanMandatory />
+              <label className="form-label" htmlFor="address">
+                Dirección
+              </label>{" "}
+              <SpanMandatory />
               <input
                 type="text"
                 className="form-control mb-2"
@@ -104,24 +128,6 @@ function SupplierForm() {
                 onChange={(e) => setAddress(e.target.value)}
                 value={address}
                 required
-              />
-              <label htmlFor="latitude">Latitud</label>
-              <input
-                type="text"
-                className="form-control mb-2"
-                id="latitude"
-                onChange={(e) => setLatitude(e.target.value)}
-                value={latitude}
-                disabled
-              />
-              <label htmlFor="longitude">Longitud</label>
-              <input
-                type="text"
-                className="form-control mb-2"
-                id="longitude"
-                onChange={(e) => setLongitude(e.target.value)}
-                value={longitude}
-                disabled
               />
               <label htmlFor="department">Departamento</label> <SpanMandatory />
               <select
