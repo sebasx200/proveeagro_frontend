@@ -31,6 +31,28 @@ function SupplierList() {
     fetchData();
   }, []);
 
+  const buttonAgenda = {
+    name: 'MI AGENDA',
+    cell: (row) => (
+      <button 
+      onClick={() => handleButtonClick(row)}
+      style={{
+      backgroundColor: '#208454',
+      color: 'white',
+      border: 'none',
+      padding: '5px 10px',
+      borderRadius: '5px',
+      cursor: 'pointer'
+      }}
+      >
+      Agregar
+      </button>
+    ),
+    ignoreRowClick: true,
+    allowOverflow: true,
+    button: true,
+  };
+
   const columns = [
     {
       name: "NOMBRE",
@@ -40,6 +62,8 @@ function SupplierList() {
       name: "DIRECCIÓN",
       selector: (row) => row.location.address,
     },
+
+    buttonAgenda, 
   ];
 
   const handleRowClick = (row) => {
@@ -83,7 +107,14 @@ function SupplierList() {
             width: "60%",
             height: "60%",
             margin: "auto",
+            color: "white",
+            backgroundColor: "rgba(0, 128, 0, 0.5)", // Fondo sombreado
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)" // Sombra adicional
           },
+          //overlay: {
+            //backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo sombreado
+            //boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)" // Sombra adicional
+          //}
         }}
       >
         <button
