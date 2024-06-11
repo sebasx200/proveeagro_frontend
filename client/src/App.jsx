@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
 import Home from "./pages/dashboard/Home";
+import Agenda from "./pages/dashboard/Agenda";
 import Suppliers from "./pages/suppliers/Suppliers";
 import AddSupplier from "./pages/suppliers/AddSupplier";
 import Farms from "./pages/farms/Farms";
@@ -40,7 +41,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/agenda"
+          element={
+            <ProtectedRoute>
+              <Agenda />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/supplier/suppliers/"
           element={

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { getFarms, farmApi } from "../../api/farmApi";
+import { getFarms, farmApi, updateFarm } from "../../api/farmApi";
 import { toast } from "react-hot-toast";
 import CustomModal from "../CustomModal";
+import GetCitiesDepartments from "../GetCitiesDepartments";
 
 import styles from "../../pages/farms/Farms.module.css";
 
@@ -31,10 +32,31 @@ function FarmList() {
     setModalIsOpen(true);
   };
 
+  const handleUpdate = async () => {
+    try {
+      await updateFarm(selectedFarm.id, selectedFarm);
+      toast.success("Finca actualizada correctamente", {
+        duration: 5000,
+      });
+      setModalIsOpen(false);
+    } catch (error) {
+      toast.error("Error al actualizar la finca " + error.message, {
+        duration: 5000,
+      });
+    }
+  };
+
   // Function to handle the change on the form to edit the farm
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSelectedFarm({ ...selectedFarm, [name]: value });
+    const updatedFarm = { ...selectedFarm, [name]: value };
+    setSelectedFarm(updatedFarm);
+  };
+
+  // Function to handle the form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleUpdate(selectedFarm);
   };
 
   return (
@@ -59,60 +81,38 @@ function FarmList() {
       <CustomModal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
-        api={farmApi}
-        endpoint={`/farms/${selectedFarm._id}`}
         initialData={selectedFarm}
-        onUpdate={(updatedFarm) => {
-          const updatedFarms = farms.map((farm) =>
-            farm._id === updatedFarm._id ? updatedFarm : farm
-          );
-          setFarms(updatedFarms);
-        }}
       >
         {/* Form to edit the farm*/}
         {selectedFarm && (
-          <div>
-          <div className="form-group">
-          <label htmlFor="name">Nombre</label>
-          <input
-            type="text"
-            className="form-control mb-2"
-            id="name"
-            name="name"
-            value={selectedFarm.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="address">Dirección</label>
-          <input
-            type="text"
-            className="form-control mb-2"
-            id="address"
-            name="address"
-            value={selectedFarm.location.address}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="city">Ciudad</label>
-          <input
-            type="text"
-            className="form-control mb-2"
-            id="city"
-            name="city"
-            value={selectedFarm.location.city}
-            onChange={handleChange}
-            required
-          />
-          
-        </div>
-        </div>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="name">Nombre</label>
+              <input
+                type="text"
+                className="form-control mb-2"
+                id="name"
+                name="name"
+                value={selectedFarm.name}
+                onChange={handleChange}
+                required
+              />
+              <label htmlFor="address">Dirección</label>
+              <input
+                type="text"
+                className="form-control mb-2"
+                id="address"
+                name="address"
+                value={selectedFarm.location.address}
+                onChange={handleChange}
+                required
+              />
+              <GetCitiesDepartments />
+            </div>
+            <button className="btn btn-success">Guardar cambios</button>
+          </form>
         )}
         {/* end of the form */}
-        
       </CustomModal>
     </div>
   );

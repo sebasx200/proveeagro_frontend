@@ -79,13 +79,17 @@ function SupplierList() {
 
   return (
     <div className=" mt-5">
+      <div className="row">
+        <div className="col-md-3">
       <input
-        className="mb-3"
+        className="form-control mb-3"
         type="text"
         placeholder="Buscar proveedor"
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
+      </div>
+      </div>
       <DataTable
         columns={columns}
         data={filteredSuppliers}
@@ -111,10 +115,10 @@ function SupplierList() {
             backgroundColor: "rgba(0, 128, 0, 0.5)", // Fondo sombreado
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)" // Sombra adicional
           },
-          //overlay: {
-            //backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo sombreado
-            //boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)" // Sombra adicional
-          //}
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo sombreado
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)" // Sombra adicional
+          }
         }}
       >
         <button
