@@ -10,4 +10,5 @@ applyAuthInterceptor(farmApi);
 export const getFarms = () => farmApi.get("/farm/farms/");
 export const addFarm = (data) => farmApi.post("/farm/farms/", data);
 export const updateFarm = (id, data) => farmApi.put(`/farm/farms/${id}/`, data);
+export const getFarmsSuppliers = () => farmApi.get("/farm/farm_suppliers/");
 export { farmApi }
