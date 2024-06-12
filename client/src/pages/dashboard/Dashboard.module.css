@@ -8,7 +8,7 @@
 }
 
 .agendaPage{
-    background-image: url('/img/img2.png');
+    background-image: url('/img/img12.png');
     background-size: cover;
     background-position: center;
     min-height: 100vh;
@@ -16,6 +16,13 @@
 }
 
 .cardPanel{
+    background-color: rgba(236, 236, 236, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    
+}
+
+.infoPanel{
     background-color: rgba(236, 236, 236, 0.8);
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);

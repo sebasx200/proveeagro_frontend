@@ -136,6 +136,10 @@ function SupplierList() {
     supplier.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  const handleButtonClick = (row) => {
+    alert("Proveedor agregado a la agenda");
+  }
+
   return (
     <div className=" mt-5">
       <div className="row">
@@ -223,7 +227,7 @@ function SupplierList() {
                 </div>
                 <button className="btn btn-primary">Guardar cambios</button>
                 <button
-                  className="btn btn-danger m-3"
+                  className="btn btn-danger m-2"
                   onClick={handleSupplierDelete}
                 >
                   Eliminar proveedor
