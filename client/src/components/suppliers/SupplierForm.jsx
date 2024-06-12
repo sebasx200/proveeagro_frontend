@@ -46,7 +46,7 @@ function SupplierForm() {
   const filterCities = () => {
     if (selectedDepartment) {
       // return the cities that match the selected department
-      return cities.filter((city) => city.department == selectedDepartment);
+      return cities.filter((city) => city.department.id == selectedDepartment);
     }
     // return an empty array if no department is selected
     return [];
@@ -67,37 +67,43 @@ function SupplierForm() {
     e.preventDefault();
     if (latitude === null || longitude === null) {
       const userConfirmation = window.confirm(
-        "No has seleccionado la ubicación en el mapa. ¿Deseas continuar de todas formas?"
+        "No has seleccionado la ubicación en el mapa. ¿Deseas continuar?"
       );
       if (userConfirmation) {
-        supplierApi
-          .post("/supplier/suppliers/", {
-            name,
-            location: {
-              address,
-              latitude,
-              longitude,
-              city,
-            },
-          })
-          .then((res) => {
-            if (res.status === 201){
-              toast.success(
-                "El proveedor " + name + " ha sido creado correctamente."
-              );
-              setName("");
-              setAddress("");
-              setLatitude(null);
-              setLongitude(null);
-              setCity("");
-            }
-            else toast.error("Error al crear el proveedor " + name);
-          })
-          .catch((err) => alert(err));
-      } else {
-        return;
+        // if the user confirms, create the supplier
+        createSupplierRequest();
       }
+    } else {
+      // if the user has selected the location, create the supplier
+      createSupplierRequest();
     }
+  };
+
+  // function to create a new supplier
+  const createSupplierRequest = () => {
+    supplierApi
+      .post("/supplier/suppliers/", {
+        name,
+        location: {
+          address,
+          latitude,
+          longitude,
+          city,
+        },
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          toast.success(
+            "El proveedor " + name + " ha sido creado correctamente."
+          );
+          setName("");
+          setAddress("");
+          setLatitude(null);
+          setLongitude(null);
+          setCity("");
+        } else toast.error("Error al crear el proveedor " + name);
+      })
+      
   };
 
   return (

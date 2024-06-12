@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { getFarms, farmApi, updateFarm } from "../../api/farmApi";
 import { toast } from "react-hot-toast";
 import CustomModal from "../CustomModal";
-import GetCitiesDepartments from "../GetCitiesDepartments";
+import useCitiesDepartments from "../useCitiesDepartments";
+import { LocationMap } from "../Maps";
 
 import styles from "../../pages/farms/Farms.module.css";
 
@@ -10,6 +11,8 @@ function FarmList() {
   const [farms, setFarms] = useState([]);
   const [selectedFarm, setSelectedFarm] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const { departments, cities, handleDepartmentChange } =
+    useCitiesDepartments();
 
   // Fetch the data
   useEffect(() => {
@@ -47,10 +50,19 @@ function FarmList() {
   };
 
   // Function to handle the change on the form to edit the farm
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const updatedFarm = { ...selectedFarm, [name]: value };
-    setSelectedFarm(updatedFarm);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setSelectedFarm((prevFarm) => {
+      if (name in prevFarm) {
+        return { ...prevFarm, [name]: value };
+      } else if (prevFarm.location && name in prevFarm.location) {
+        return {
+          ...prevFarm,
+          location: { ...prevFarm.location, [name]: value },
+        };
+      }
+      return prevFarm;
+    });
   };
 
   // Function to handle the form submission
@@ -85,32 +97,79 @@ function FarmList() {
       >
         {/* Form to edit the farm*/}
         {selectedFarm && (
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Nombre</label>
-              <input
-                type="text"
-                className="form-control mb-2"
-                id="name"
-                name="name"
-                value={selectedFarm.name}
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="address">Dirección</label>
-              <input
-                type="text"
-                className="form-control mb-2"
-                id="address"
-                name="address"
-                value={selectedFarm.location.address}
-                onChange={handleChange}
-                required
-              />
-              <GetCitiesDepartments />
+          <div className="row">
+            <div className="col-md-6">
+              <form onSubmit={handleSubmit}>
+                <div className="form-group mb-2">
+                  <label htmlFor="name">Nombre</label>
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    id="name"
+                    name="name"
+                    value={selectedFarm.name}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="address">Dirección</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="address"
+                    name="address"
+                    value={selectedFarm.location.address}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="department">Departamento</label>
+                  <select
+                    className="form-select"
+                    onChange={handleDepartmentChange}
+                    id="department"
+                    name="department"
+                  >
+                    <option value="">Selecciona el departamento</option>
+                    {departments.map((department) => (
+                      <option key={department.id} value={department.id}>
+                        {department.name}
+                      </option>
+                    ))}
+                  </select>
+                  <label htmlFor="city">Ciudad</label>
+                  <select
+                    className="form-select"
+                    id="city"
+                    name="city"
+                    onChange={handleChange}
+                  >
+                    <option value="">Selecciona la ciudad</option>
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.id}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button className="btn btn-primary">Guardar cambios</button>
+              </form>
             </div>
-            <button className="btn btn-success">Guardar cambios</button>
-          </form>
+            <div className="col-md-6">
+              <h2>Ubicación</h2>
+              {selectedFarm.location?.latitude &&
+              selectedFarm.location?.longitude ? (
+                <LocationMap
+                  lat={selectedFarm.location.latitude}
+                  lng={selectedFarm.location.longitude}
+                  popupText={selectedFarm.location.address}
+                />
+              ) : (
+                <p>
+                  Ubicación no disponible: no se han proporcionado las
+                  coordenadas
+                </p>
+              )}
+            </div>
+          </div>
         )}
         {/* end of the form */}
       </CustomModal>

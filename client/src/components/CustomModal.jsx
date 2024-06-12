@@ -39,7 +39,14 @@ const CustomModal = ({ isOpen, onRequestClose, children, initialData }) => {
           width: "60%",
           height: "60%",
           margin: "auto",
+          color: "white",
+          backgroundColor: "rgba(0, 128, 0, 0.5)", // Fondo sombreado
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)" // Sombra adicional
         },
+        overlay: {
+          backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo sombreado
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)" // Sombra adicional
+        }
       }}
     >
       <button

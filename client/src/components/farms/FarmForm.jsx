@@ -44,7 +44,7 @@ function FarmForm() {
   const filterCities = () => {
     if (selectedDepartment) {
       // return the cities that match the selected department
-      return cities.filter((city) => city.department == selectedDepartment);
+      return cities.filter((city) => city.department.id == selectedDepartment);
     }
     // return an empty array if no department is selected
     return [];
@@ -60,7 +60,7 @@ function FarmForm() {
     setLatitude(latlng.lat);
     setLongitude(latlng.lng);
   };
-  // function to create a new farm
+
   const createFarm = (e) => {
     e.preventDefault();
     if (latitude === null || longitude === null) {
@@ -68,39 +68,49 @@ function FarmForm() {
         "No has seleccionado la ubicación en el mapa. ¿Deseas continuar de todas formas?"
       );
       if (userConfirmation) {
-        farmApi
-          .post("/farm/farms/", {
-            name,
-            location: {
-              address,
-              latitude,
-              longitude,
-              city,
-            },
-          })
-          .then((res) => {
-            if (res.status === 201) {
-              toast.success(
-                "La finca " + name + " ha sido creado correctamente."
-              );
-              setName("");
-              setAddress("");
-              setLatitude(null);
-              setLongitude(null);
-              setCity("");
-            } else toast.error("Error al crear la finca " + name);
-          })
-          .catch((error) => alert("Error al añadir la finca " + error.message));
-      } else {
-        return;
+        // If user confirms, proceed with creating the farm with null latitude or longitude
+        createFarmRequest();
       }
+    } else {
+      // If both latitude and longitude are not null, proceed with creating the farm
+      createFarmRequest();
     }
   };
+
+  // function to create a new farm
+  const createFarmRequest = () => {
+  farmApi
+    .post("/farm/farms/", {
+      name,
+      location: {
+        address,
+        latitude,
+        longitude,
+        city,
+      },
+    })
+    .then((res) => {
+      if (res.status === 201) {
+        toast.success(
+          "La finca " + name + " ha sido creado correctamente."
+        );
+        setName("");
+        setAddress("");
+        setLatitude(null);
+        setLongitude(null);
+        setCity("");
+      } else toast.error("Error al crear la finca " + name);
+    })
+    .catch((error) => {
+      // Handle error
+      alert("Error al crear la finca: " + error.message);
+    });
+};
 
   return (
     <div className="container mt-5">
       <div className="row d-flex justify-content-center align-items-center">
-        <div className={`col-md-6 pb-5 ${styles.formPanel}`}>
+        <div className={`col-md-6 pb-3 ${styles.formPanel}`}>
           <h3>Añadir nueva finca</h3>
 
           <form onSubmit={createFarm}>
@@ -125,6 +135,7 @@ function FarmForm() {
               <Map onMapClick={handleMapClick} />
               <label htmlFor="department">Departamento</label> <SpanMandatory />
               <select
+                required
                 className="form-select mb-2"
                 id="department"
                 onChange={handleDepartmentChange}
@@ -138,6 +149,7 @@ function FarmForm() {
               </select>
               <label htmlFor="city">Ciudad</label> <SpanMandatory />
               <select
+                required
                 className="form-select mb-2"
                 id="city"
                 onChange={(e) => setCity(e.target.value)}
