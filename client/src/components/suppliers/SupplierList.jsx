@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getSuppliers, updateSupplier } from "../../api/supplierApi";
+import { getSuppliers, supplierApi, updateSupplier } from "../../api/supplierApi";
 import DataTable from "react-data-table-component";
 import { toast } from "react-hot-toast";
 import { LocationMap } from "../Maps";
@@ -107,6 +107,29 @@ function SupplierList() {
     handleUpdate(selectedSupplier);
   };
 
+  const handleSupplierDelete = () => {
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que quieres eliminar el proveedor?"
+    );
+    if (confirmDelete) {
+      deleteRequest();
+    }
+  };
+
+  const deleteRequest = async () => {
+    try {
+      await supplierApi.delete(`/supplier/suppliers/${selectedSupplier.id}/`);
+      toast.success("Proveedor eliminado correctamente", {
+        duration: 5000,
+      });
+      setModalIsOpen(false);
+    } catch (error) {
+      toast.error("Error al eliminar el proveedor " + error.message, {
+        duration: 5000,
+      });
+    }
+  };
+
   const [searchText, setSearchText] = useState("");
 
   const filteredSuppliers = suppliers.filter((supplier) =>
@@ -199,6 +222,12 @@ function SupplierList() {
                   </select>
                 </div>
                 <button className="btn btn-primary">Guardar cambios</button>
+                <button
+                  className="btn btn-danger m-3"
+                  onClick={handleSupplierDelete}
+                >
+                  Eliminar proveedor
+                </button>
               </form>
             </div>
             <div className="col-md-6">

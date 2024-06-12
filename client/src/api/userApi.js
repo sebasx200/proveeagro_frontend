@@ -7,4 +7,6 @@ const userApi = axios.create({
 
 applyAuthInterceptor(userApi);
 
+export const updateUser = (data) => userApi.put(`/login/user/profile/`, data);
+
 export default userApi;

@@ -71,6 +71,29 @@ function FarmList() {
     handleUpdate(selectedFarm);
   };
 
+  const handleFarmDelete = () => {
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que quieres eliminar la finca?"
+    );
+    if (confirmDelete) {
+      deleteRequest();
+    }
+  };
+
+  const deleteRequest = async () => {
+    try {
+      await farmApi.delete(`/farm/farms/${selectedFarm.id}/`);
+      toast.success("Finca eliminada correctamente", {
+        duration: 5000,
+      });
+      setModalIsOpen(false);
+    } catch (error) {
+      toast.error("Error al eliminar la finca " + error.message, {
+        duration: 5000,
+      });
+    }
+  };
+
   return (
     <div className="row">
       {farms.map((farm, index) => (
@@ -151,6 +174,12 @@ function FarmList() {
                   </select>
                 </div>
                 <button className="btn btn-primary">Guardar cambios</button>
+                <button
+                  className="btn btn-danger m-3"
+                  onClick={handleFarmDelete}
+                >
+                  Eliminar finca
+                </button>
               </form>
             </div>
             <div className="col-md-6">

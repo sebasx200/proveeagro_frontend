@@ -54,8 +54,8 @@ function Navbar() {
                     </Link>
                   </li>
                   <li>
-                  <Link className="dropdown-item" to={"/farm/add-farm/"}>
-                    Añadir finca
+                    <Link className="dropdown-item" to={"/farm/add-farm/"}>
+                      Añadir finca
                     </Link>
                   </li>
                 </ul>
@@ -107,10 +107,29 @@ function Navbar() {
           {/* if the user is authorized, show the following links */}
           {user && (
             <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link to="/logout" className="nav-link" onClick={logout}>
-                  Cerrar sesión
-                </Link>
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+            
+                >
+                  Perfil
+                </a>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link className="dropdown-item" to={"/user/profile/"}>
+                      Mis Datos
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/logout" className="dropdown-item" onClick={logout}>
+                      Cerrar sesión
+                    </Link>
+                  </li>
+                </ul>
               </li>
             </ul>
           )}
