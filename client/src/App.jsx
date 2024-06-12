@@ -9,6 +9,7 @@ import Suppliers from "./pages/suppliers/Suppliers";
 import AddSupplier from "./pages/suppliers/AddSupplier";
 import Farms from "./pages/farms/Farms";
 import AddFarm from "./pages/farms/AddFarm";
+import UserProfile from "./pages/dashboard/UserProfile";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/ui/Navbar";
 import Footer from "./components/ui/Footer";
@@ -38,6 +39,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/profile"
+          element={
+            <ProtectedRoute>
+              <UserProfile />
             </ProtectedRoute>
           }
         />
