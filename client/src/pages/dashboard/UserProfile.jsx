@@ -1,13 +1,16 @@
 import styles from "./Dashboard.module.css";
 import UserData from "../../components/dashboard/UserData";
 
+
 function UserProfile() {
   return (
     <div>
+      
       <div className={`${styles.agendaPage}`}>
-        <UserData />
+       <UserData />
       </div>
-    </div>
+      </div>
+    
   );
 }
 
