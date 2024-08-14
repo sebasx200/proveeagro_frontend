@@ -39,7 +39,7 @@ function FormLogin({ route }) {
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
       login();
       toast.success("Bienvenido a Proveeagro " + username);
-      navigate("/");
+      navigate("/farm/farms");
     } catch (error) {
       toast.error("Error al iniciar sesión");
     } finally {

@@ -28,11 +28,6 @@ function Navbar() {
           {user && (
             <ul className="navbar-nav">
               <li className="nav-item">
-                <Link to={"/"} className="nav-link">
-                  Inicio
-                </Link>
-              </li>
-              <li className="nav-item">
                 <Link to={"/agenda"} className="nav-link">
                   Mi agenda
                 </Link>
