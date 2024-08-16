@@ -187,7 +187,7 @@ function FormRegister() {
             Object.keys(serverError).map((key, index) => (
               <div key={index} className="alert alert-danger mt-3" role="alert">
                 <p>
-                  {key}: {serverError[key]}
+                  {serverError[key]}
                 </p>
               </div>
             ))}

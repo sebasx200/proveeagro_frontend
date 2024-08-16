@@ -19,6 +19,7 @@ import styles from "../ui/FormComponents.module.css";
 function FormLogin({ route }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [serverError, setServerError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login } = useUser();
@@ -41,6 +42,7 @@ function FormLogin({ route }) {
       toast.success("Bienvenido a Proveeagro " + username);
       navigate("/farm/farms");
     } catch (error) {
+      setServerError(error.response.data);
       toast.error("Error al iniciar sesión");
     } finally {
       setLoading(false);
@@ -120,6 +122,15 @@ function FormLogin({ route }) {
               ¿Olvidaste tu contraseña?
             </Link>
           </div>
+          {/* If errors on login */}
+          {serverError &&
+            Object.keys(serverError).map((key, index) => (
+              <div key={index} className="alert alert-danger mt-3" role="alert">
+                <p>
+                  {serverError[key]}
+                </p>
+              </div>
+            ))}
           {/* submit button */}
           <div className="container text-center mt-4 mb-2">
             <FormButton
