@@ -21,7 +21,7 @@ function AgendaList() {
     <div className="container p-5">
       <div className="row">
         <div className={`col-md-6 pb-3 ${styles.infoPanel}`}>
-          <h1>Agenda</h1>
+          <h3>Agenda</h3>
           <ul>
             {farmSuppliers.map((farmSupplier) => (
               <li key={farmSupplier.id}>

@@ -9,7 +9,7 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg bg-success navbar-dark">
       <div className="container">
-        <Link to={"/"} className="navbar-brand">
+        <Link to={"/farm/farms/"} className="navbar-brand">
           ProveeAgro
         </Link>
         <button

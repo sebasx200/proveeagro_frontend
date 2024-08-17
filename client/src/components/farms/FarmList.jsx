@@ -6,6 +6,7 @@ import useCitiesDepartments from "../useCitiesDepartments";
 import { LocationMap } from "../Maps";
 
 import styles from "../../pages/farms/Farms.module.css";
+import { Link } from "react-router-dom";
 
 function FarmList() {
   const [farms, setFarms] = useState([]);
@@ -95,7 +96,25 @@ function FarmList() {
   };
 
   return (
-    <div className="row">
+    <div>
+      {farms.length == 0 && (
+        <div className={`w-100 ${styles.formPanel}`}>
+          <div className="row">
+            <div className="d-flex justify-content-center align-items-center">
+              <h4>
+                No tienes ninguna finca registrada. ¿Quieres añadir una finca?
+              </h4>
+            </div>
+            <div className="row">
+              <div className="d-flex justify-content-center align-items-center">
+                <Link to="/farm/add-farm/" className="text-decoration-none">
+                  Añadir finca
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {farms.map((farm, index) => (
         <div className="col-md-4" key={index}>
           <div
