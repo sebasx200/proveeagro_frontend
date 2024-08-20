@@ -1,4 +1,5 @@
 import React from "react";
+import PageTitle from "./components/pageTitle";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Login from "./pages/login/Login";
@@ -30,75 +31,114 @@ function RegisterAndLogout() {
 function App() {
   return (
     <UserProvider>
-    <BrowserRouter>
-    <div className="App">
-      <Navbar />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/profile"
-          element={
-            <ProtectedRoute>
-              <UserProfile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/agenda"
-          element={
-            <ProtectedRoute>
-              <Agenda />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/supplier/suppliers/"
-          element={
-            <ProtectedRoute>
-              <Suppliers />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/supplier/add-supplier/"
-          element={
-            <ProtectedRoute>
-              <AddSupplier />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/farm/farms/"
-          element={
-            <ProtectedRoute>
-              <Farms />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/farm/add-farm/"
-          element={
-            <ProtectedRoute>
-              <AddFarm />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/register" element={<RegisterAndLogout />} />
-        <Route path="*" element={<NotFound />}></Route>
-      </Routes>
-      <Toaster />
-      <Footer />
-    </div>
-    </BrowserRouter>
+      <BrowserRouter>
+        <div className="App">
+          <Navbar />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Inicio" />
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/profile"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Perfil" />
+                  <UserProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/agenda"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Agenda" />
+                  <Agenda />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/supplier/suppliers/"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Proveedores" />
+                  <Suppliers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/supplier/add-supplier/"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Añadir proveedor" />
+                  <AddSupplier />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/farm/farms/"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Fincas" />
+                  <Farms />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/farm/add-farm/"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Añadir finca" />
+                  <AddFarm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <>
+                  <PageTitle title={"Inicio de sesión"} />
+                  <Login />
+                </>
+              }
+            />
+            <Route
+              path="/logout"
+              element={
+                <>
+                  <PageTitle title={"Cerrar sesión"} />
+                  <Logout />
+                </>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <>
+                  <PageTitle title={"Registro"} />
+                  <RegisterAndLogout />
+                </>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <>
+                  <PageTitle title={"Página no encontrada"} />
+                  <NotFound />
+                </>
+              }
+            ></Route>
+          </Routes>
+          <Toaster />
+          <Footer />
+        </div>
+      </BrowserRouter>
     </UserProvider>
   );
 }
