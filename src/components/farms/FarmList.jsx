@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { getFarms, farmApi, updateFarm } from "../../api/farmApi";
+import api from "../../api/api";
+import useFetchData from "../../hooks/useFetchData";
 import { toast } from "react-hot-toast";
 import CustomModal from "../CustomModal";
 import useCitiesDepartments from "../useCitiesDepartments";
@@ -9,26 +11,18 @@ import styles from "../../pages/farms/Farms.module.css";
 import { Link } from "react-router-dom";
 
 function FarmList() {
-  const [farms, setFarms] = useState([]);
   const [selectedFarm, setSelectedFarm] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { departments, cities, handleDepartmentChange } =
     useCitiesDepartments();
 
-  // Fetch the data
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const responseFarms = await getFarms();
-        setFarms(responseFarms.data);
-      } catch (error) {
-        toast.error("Error al cargar los datos " + error.message, {
-          duration: 5000,
-        });
-      }
-    }
-    fetchData();
-  }, []);
+  // Fetch the farms using the useFetchData hook
+
+  const {
+    data: farms,
+    loading: loadingFarms,
+    error: errorFarms,
+  } = useFetchData(api, "/farm/farms/");
 
   // Function to handle the click on a card
   const onCardClick = (card) => {
@@ -97,41 +91,29 @@ function FarmList() {
 
   return (
     <div>
-      {farms.length == 0 && (
-        <div className={`w-100 ${styles.formPanel}`}>
-          <div className="row">
-            <div className="d-flex justify-content-center align-items-center">
-              <h4>
-                No tienes ninguna finca registrada. ¿Quieres añadir una finca?
-              </h4>
-            </div>
-            <div className="row">
-              <div className="d-flex justify-content-center align-items-center">
-                <Link to="/farm/add-farm/" className="text-decoration-none">
-                  Añadir finca
-                </Link>
+      {farms ? (
+        <div>
+          {farms.map((farm, index) => (
+            <div className="col-md-4" key={index}>
+              <div
+                className={`card justify-content-center align-items-center mb-5 ${styles.cardPanel}`}
+                onClick={() => onCardClick(farm)}
+              >
+                <div className="card-body">
+                  <img
+                    src="/img/form-img/logo_proveeagro-bg4.png"
+                    alt="finca"
+                    width="200"
+                  />
+                  <h4 className="card-title text-center">{farm.name}</h4>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
+      ) : (
+        <h1>Loading data, please wait...</h1>
       )}
-      {farms.map((farm, index) => (
-        <div className="col-md-4" key={index}>
-          <div
-            className={`card justify-content-center align-items-center mb-5 ${styles.cardPanel}`}
-            onClick={() => onCardClick(farm)}
-          >
-            <div className="card-body">
-              <img
-                src="/img/form-img/logo_proveeagro-bg4.png"
-                alt="finca"
-                width="200"
-              />
-              <h4 className="card-title text-center">{farm.name}</h4>
-            </div>
-          </div>
-        </div>
-      ))}
       <CustomModal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
