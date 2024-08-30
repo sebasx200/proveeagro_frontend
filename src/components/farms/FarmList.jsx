@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import { getFarms, farmApi, updateFarm } from "../../api/farmApi";
-import api from "../../api/api";
+import { useState } from "react";
+import { farmApi, updateFarm } from "../../api/farmApi";
 import useFetchData from "../../hooks/useFetchData";
 import { toast } from "react-hot-toast";
 import CustomModal from "../CustomModal";
@@ -17,12 +16,11 @@ function FarmList() {
     useCitiesDepartments();
 
   // Fetch the farms using the useFetchData hook
-
   const {
     data: farms,
     loading: loadingFarms,
     error: errorFarms,
-  } = useFetchData(api, "/farm/farms/");
+  } = useFetchData("/farm/farms/");
 
   // Function to handle the click on a card
   const onCardClick = (card) => {
@@ -30,6 +28,7 @@ function FarmList() {
     setModalIsOpen(true);
   };
 
+  // function to handle the delete of a farm
   const handleUpdate = async () => {
     try {
       await updateFarm(selectedFarm.id, selectedFarm);
@@ -91,7 +90,24 @@ function FarmList() {
 
   return (
     <div>
-      {farms ? (
+      {farms.length == 0 ? (
+        <div className={`w-100 ${styles.formPanel}`}>
+          <div className="row">
+            <div className="d-flex justify-content-center align-items-center">
+              <h4>
+                No tienes ninguna finca registrada. ¿Quieres añadir una finca?
+              </h4>
+            </div>
+            <div className="row">
+              <div className="d-flex justify-content-center align-items-center">
+                <Link to="/farm/add-farm/" className="text-decoration-none">
+                  Añadir finca
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
         <div>
           {farms.map((farm, index) => (
             <div className="col-md-4" key={index}>
@@ -111,8 +127,6 @@ function FarmList() {
             </div>
           ))}
         </div>
-      ) : (
-        <h1>Loading data, please wait...</h1>
       )}
       <CustomModal
         isOpen={modalIsOpen}

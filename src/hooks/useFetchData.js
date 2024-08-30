@@ -1,16 +1,17 @@
 // this custom hook is used to make get request to the server using axios
 import { useState, useEffect } from 'react';
+import api from '../api/api';
 
 // it takes an axios object and an url
-const useFetchData = (axiosInstance, endpoint) => {
-  const [data, setData] = useState(null);
+const useFetchData = (endpoint) => {
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get(endpoint);
+        const response = await api.get(endpoint);
         setData(response.data);
       } catch (err) {
         setError(err.message);
@@ -20,7 +21,7 @@ const useFetchData = (axiosInstance, endpoint) => {
     };
 
     fetchData();
-  }, [axiosInstance, endpoint]);
+  }, [endpoint]);
 
   return { data, loading, error };
 };

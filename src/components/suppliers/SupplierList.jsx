@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { getSuppliers, supplierApi, updateSupplier } from "../../api/supplierApi";
+import { useState } from "react";
+import { supplierApi, updateSupplier } from "../../api/supplierApi";
+import useFetchData from "../../hooks/useFetchData";
 import DataTable from "react-data-table-component";
 import { toast } from "react-hot-toast";
 import { LocationMap } from "../Maps";
@@ -10,27 +11,17 @@ import useCitiesDepartments from "../useCitiesDepartments";
 Modal.setAppElement("#root");
 
 function SupplierList() {
-  const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { departments, cities, handleDepartmentChange } =
     useCitiesDepartments();
 
-  useEffect(() => {
-    // function to fetch the data
-    async function fetchData() {
-      try {
-        const responseSuppliers = await getSuppliers();
-        setSuppliers(responseSuppliers.data);
-      } catch (error) {
-        toast.error("Error al cargar los datos " + error.message, {
-          duration: 5000,
-        });
-      }
-    }
-    // call the function
-    fetchData();
-  }, []);
+  // Fetch the suppliers using the useFetchData hook
+  const {
+    data: suppliers,
+    loading: loadingSuppliers,
+    error: errorSuppliers,
+  } = useFetchData("/supplier/suppliers/");
 
   const buttonAgenda = {
     name: "MI AGENDA",
@@ -138,7 +129,7 @@ function SupplierList() {
 
   const handleButtonClick = (row) => {
     alert("Proveedor agregado a la agenda");
-  }
+  };
 
   return (
     <div className=" mt-5">
