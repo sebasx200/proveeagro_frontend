@@ -6,13 +6,14 @@ import { toast } from "react-hot-toast";
 import { LocationMap } from "../Maps";
 import Modal from "react-modal";
 import CustomModal from "../CustomModal";
-import useCitiesDepartments from "../useCitiesDepartments";
+import useCitiesDepartments from "../../hooks/useCitiesDepartments";
 
 Modal.setAppElement("#root");
 
 function SupplierList() {
   const [selectedSupplier, setSelectedSupplier] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const { departments, cities, handleDepartmentChange } =
     useCitiesDepartments();
 
@@ -23,45 +24,33 @@ function SupplierList() {
     error: errorSuppliers,
   } = useFetchData("/supplier/suppliers/");
 
-  const buttonAgenda = {
-    name: "MI AGENDA",
-    cell: (row) => (
-      <button
-        onClick={() => handleButtonClick(row)}
-        style={{
-          backgroundColor: "#208454",
-          color: "white",
-          border: "none",
-          padding: "5px 10px",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Agregar
-      </button>
-    ),
-    ignoreRowClick: true,
-    button: true,
-  };
-
+  // these are the table columns
   const columns = [
     {
-      name: "NOMBRE",
+      name: "Nombre",
       selector: (row) => row.name,
+      sortable: true,
     },
     {
-      name: "DIRECCIÓN",
+      name: "Dirección",
       selector: (row) => row.location.address,
+      sortable: true,
     },
 
-    buttonAgenda,
+    {
+      name: "Correo electrónico",
+      selector: (row) => row.email,
+      sortable: true,
+    },
   ];
 
+  // this handles the click on a table row
   const handleRowClick = (row) => {
     setSelectedSupplier(row);
     setModalIsOpen(true);
   };
 
+  // this takes the new data to update the suppliers
   const handleUpdate = async () => {
     try {
       await updateSupplier(selectedSupplier.id, selectedSupplier);
@@ -98,6 +87,7 @@ function SupplierList() {
     handleUpdate(selectedSupplier);
   };
 
+  // this handles the supplier delete
   const handleSupplierDelete = () => {
     const confirmDelete = window.confirm(
       "¿Estás seguro de que quieres eliminar el proveedor?"
@@ -106,7 +96,7 @@ function SupplierList() {
       deleteRequest();
     }
   };
-
+  // logic to delete a supplier
   const deleteRequest = async () => {
     try {
       await supplierApi.delete(`/supplier/suppliers/${selectedSupplier.id}/`);
@@ -121,15 +111,10 @@ function SupplierList() {
     }
   };
 
-  const [searchText, setSearchText] = useState("");
-
+  // this filters the suppliers taking the text in the search box
   const filteredSuppliers = suppliers.filter((supplier) =>
     supplier.name.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const handleButtonClick = (row) => {
-    alert("Proveedor agregado a la agenda");
-  };
 
   return (
     <div className=" mt-5">
@@ -144,6 +129,7 @@ function SupplierList() {
           />
         </div>
       </div>
+      {/* Table of suppliers */}
       <DataTable
         columns={columns}
         data={filteredSuppliers}

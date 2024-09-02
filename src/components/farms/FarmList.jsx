@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { farmApi, updateFarm } from "../../api/farmApi";
+import api from "../../api/api";
 import useFetchData from "../../hooks/useFetchData";
 import { toast } from "react-hot-toast";
 import CustomModal from "../CustomModal";
-import useCitiesDepartments from "../useCitiesDepartments";
+import useCitiesDepartments from "../../hooks/useCitiesDepartments";
 import { LocationMap } from "../Maps";
 
 import styles from "../../pages/farms/Farms.module.css";
@@ -31,7 +32,7 @@ function FarmList() {
   // function to handle the delete of a farm
   const handleUpdate = async () => {
     try {
-      await updateFarm(selectedFarm.id, selectedFarm);
+      await api.put(selectedFarm.id, selectedFarm);
       toast.success("Finca actualizada correctamente", {
         duration: 5000,
       });
@@ -76,7 +77,7 @@ function FarmList() {
 
   const deleteRequest = async () => {
     try {
-      await farmApi.delete(`/farm/farms/${selectedFarm.id}/`);
+      await api.delete(`/farm/farms/${selectedFarm.id}/`);
       toast.success("Finca eliminada correctamente", {
         duration: 5000,
       });

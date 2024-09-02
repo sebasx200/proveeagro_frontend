@@ -1,13 +1,11 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { getDepartments, getCities } from "../../api/supplierApi";
+import { useState } from "react";
+import useCitiesDepartments from "../../hooks/useCitiesDepartments";
 import { farmApi } from "../../api/farmApi";
+import api from "../../api/api";
 import { toast } from "react-hot-toast";
 import { Map } from "../Maps";
-import { SpanMandatory, FormButton } from "../ui/FormComponents";
 
 import styles from "../../pages/farms/Farms.module.css";
-import { set } from "react-hook-form";
 
 function FarmForm() {
   const [name, setName] = useState("");
@@ -15,45 +13,9 @@ function FarmForm() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [city, setCity] = useState("");
-  const [departments, setDepartments] = useState([]);
-  const [cities, setCities] = useState([]);
 
-  // useEffect to fetch the departments and cities from the API
-  useEffect(() => {
-    // function to fetch the data
-    async function fetchData() {
-      try {
-        const responseDepartments = await getDepartments();
-        setDepartments(responseDepartments.data);
-        const responseCities = await getCities();
-        setCities(responseCities.data);
-      } catch (error) {
-        toast.error("Error al cargar los datos " + error.message, {
-          duration: 5000,
-        });
-      }
-    }
-    // call the function
-    fetchData();
-  }, []);
-
-  // state to store the selected department
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
-
-  // function to filter the cities by department
-  const filterCities = () => {
-    if (selectedDepartment) {
-      // return the cities that match the selected department
-      return cities.filter((city) => city.department.id == selectedDepartment);
-    }
-    // return an empty array if no department is selected
-    return [];
-  };
-
-  // function to handle the change of the department select
-  const handleDepartmentChange = (e) => {
-    setSelectedDepartment(e.target.value);
-  };
+  const { departments, cities, handleDepartmentChange } =
+    useCitiesDepartments();
 
   // function to handle the click on the map and set the latitude and longitude inputs
   const handleMapClick = (latlng) => {
@@ -79,33 +41,31 @@ function FarmForm() {
 
   // function to create a new farm
   const createFarmRequest = () => {
-  farmApi
-    .post("/farm/farms/", {
-      name,
-      location: {
-        address,
-        latitude,
-        longitude,
-        city,
-      },
-    })
-    .then((res) => {
-      if (res.status === 201) {
-        toast.success(
-          "La finca " + name + " ha sido creado correctamente."
-        );
-        setName("");
-        setAddress("");
-        setLatitude(null);
-        setLongitude(null);
-        setCity("");
-      } else toast.error("Error al crear la finca " + name);
-    })
-    .catch((error) => {
-      // Handle error
-      alert("Error al crear la finca: " + error.message);
-    });
-};
+    api
+      .post("/farm/farms/", {
+        name,
+        location: {
+          address,
+          latitude,
+          longitude,
+          city,
+        },
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          toast.success("La finca " + name + " ha sido creado correctamente.");
+          setName("");
+          setAddress("");
+          setLatitude(null);
+          setLongitude(null);
+          setCity("");
+        } else toast.error("Error al crear la finca " + name);
+      })
+      .catch((error) => {
+        // Handle error
+        alert("Error al crear la finca: " + error.message);
+      });
+  };
 
   return (
     <div className="container mt-5">
@@ -133,31 +93,30 @@ function FarmForm() {
               />
               <h4>Selecciona la ubicación en el mapa</h4>
               <Map onMapClick={handleMapClick} />
-              <label htmlFor="department">Departamento</label> <SpanMandatory />
+              <label htmlFor="department">Departamento</label>
               <select
-                required
                 className="form-select mb-2"
                 id="department"
+                name="department"
                 onChange={handleDepartmentChange}
               >
-                <option value={null}>Selecciona el departamento</option>
-                {departments?.map((department, index) => (
-                  <option key={index} value={department.id}>
+                <option value="">Selecciona el departamento</option>
+                {departments.map((department) => (
+                  <option key={department.id} value={department.id}>
                     {department.name}
                   </option>
                 ))}
               </select>
-              <label htmlFor="city">Ciudad</label> <SpanMandatory />
+              <label htmlFor="city">Ciudad</label>
               <select
-                required
                 className="form-select mb-2"
                 id="city"
+                name="city"
                 onChange={(e) => setCity(e.target.value)}
-                value={city}
               >
-                <option value={null}>Selecciona la ciudad</option>
-                {filterCities().map((city, index) => (
-                  <option key={index} value={city.id}>
+                <option value="">Selecciona la ciudad</option>
+                {cities.map((city) => (
+                  <option key={city.id} value={city.id}>
                     {city.name}
                   </option>
                 ))}
