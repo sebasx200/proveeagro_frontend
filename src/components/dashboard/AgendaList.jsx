@@ -1,10 +1,5 @@
-import useFetchData from "../../hooks/useFetchData";
-import api from "../../api/api";
-
 // this is the agenda component
 function AgendaList() {
-
-  const { data, loading, error } = useFetchData(api, "farm/farm_suppliers/");
   
   return (
     <div className="container">

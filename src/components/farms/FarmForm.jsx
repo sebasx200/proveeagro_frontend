@@ -1,18 +1,25 @@
 import { useState } from "react";
-import useCitiesDepartments from "../../hooks/useCitiesDepartments";
-import { farmApi } from "../../api/farmApi";
-import api from "../../api/api";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import useCitiesDepartments from "../../hooks/useCitiesDepartments";
+import usePostData from "../../hooks/usePostData";
 import { Map } from "../Maps";
-
 import styles from "../../pages/farms/Farms.module.css";
 
 function FarmForm() {
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
+  const { data, loading, error, postData } = usePostData();
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [city, setCity] = useState("");
+
+  // here we setup the form hook to handle the form to create a new farm
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const navigate = useNavigate();
 
   const { departments, cities, handleDepartmentChange } =
     useCitiesDepartments();
@@ -23,74 +30,56 @@ function FarmForm() {
     setLongitude(latlng.lng);
   };
 
-  const createFarm = (e) => {
-    e.preventDefault();
-    if (latitude === null || longitude === null) {
-      const userConfirmation = window.confirm(
-        "No has seleccionado la ubicación en el mapa. ¿Deseas continuar de todas formas?"
-      );
-      if (userConfirmation) {
-        // If user confirms, proceed with creating the farm with null latitude or longitude
-        createFarmRequest();
-      }
-    } else {
-      // If both latitude and longitude are not null, proceed with creating the farm
-      createFarmRequest();
+  // submit function to send the post request to the server with the new data
+  const onSubmit = handleSubmit(async (formData) => {
+    if (latitude === null || longitude === null){
+      window.alert("No has seleccionado la ubicación de la finca en el mapa");
+      return
     }
-  };
+    const finalData = {
+      ...formData,
+      location: {
+        ...formData.location,
+        latitude: latitude,
+        longitude: longitude
+      }
+    };
 
-  // function to create a new farm
-  const createFarmRequest = () => {
-    api
-      .post("/farm/farms/", {
-        name,
-        location: {
-          address,
-          latitude,
-          longitude,
-          city,
-        },
-      })
-      .then((res) => {
-        if (res.status === 201) {
-          toast.success("La finca " + name + " ha sido creado correctamente.");
-          setName("");
-          setAddress("");
-          setLatitude(null);
-          setLongitude(null);
-          setCity("");
-        } else toast.error("Error al crear la finca " + name);
-      })
-      .catch((error) => {
-        // Handle error
-        alert("Error al crear la finca: " + error.message);
-      });
-  };
+    try {
+      await postData("/farm/farms/", finalData); // fix error data does not load
+      //toast.success("La granja "+ data.name+ " fue añadida correctamente");
+      navigate("/farm/farms/");
+      toast.success("Granja añadida correctamente");
+    } catch(err) {
+      console.error(err);
+    }
+  });
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 mb-5">
       <div className="row d-flex justify-content-center align-items-center">
         <div className={`col-md-6 pb-3 ${styles.formPanel}`}>
           <h3>Añadir nueva finca</h3>
 
-          <form onSubmit={createFarm}>
+          <form onSubmit={onSubmit}>
             <div className="form-group">
               <label htmlFor="name">Nombre</label>
               <input
                 type="text"
                 className="form-control mb-2"
                 id="name"
-                onChange={(e) => setName(e.target.value)}
-                required
+                {...register('name', { required: 'El nombre es obligatorio' })}
               />
+              {errors.name && <p className="text-danger">{errors.name.message}</p>}
               <label htmlFor="address">Dirección</label>
               <input
                 type="text"
                 className="form-control mb-2"
                 id="address"
-                onChange={(e) => setAddress(e.target.value)}
-                required
+                {...register('location.address', { required: 'La dirección es obligatoria' })}
               />
+              {errors.location?.address && <p>{errors.location.address.message}</p>}
+
               <h4>Selecciona la ubicación en el mapa</h4>
               <Map onMapClick={handleMapClick} />
               <label htmlFor="department">Departamento</label>
@@ -112,7 +101,7 @@ function FarmForm() {
                 className="form-select mb-2"
                 id="city"
                 name="city"
-                onChange={(e) => setCity(e.target.value)}
+                {...register('location.city', { required: 'La ciudad es obligatoria' })}
               >
                 <option value="">Selecciona la ciudad</option>
                 {cities.map((city) => (
@@ -123,10 +112,11 @@ function FarmForm() {
               </select>
             </div>
             <div className="d-flex justify-content-center align-items-center mt-3">
-              <button type="submit" className="btn btn-success">
-                Añadir finca
-              </button>
+              <button type="submit" className="btn btn-success"> 
+                {loading ? 'Cargando' : 'Añadir finca'}
+              </button> 
             </div>
+            {error && <p>Error: {error}</p>}
           </form>
         </div>
       </div>
