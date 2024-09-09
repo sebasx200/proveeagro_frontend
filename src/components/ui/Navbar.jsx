@@ -40,17 +40,17 @@ function Navbar() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Fincas
+                  Granjas
                 </a>
                 <ul className="dropdown-menu">
                   <li>
                     <Link className="dropdown-item" to={"/farm/farms/"}>
-                      Ver fincas
+                      Ver granjas
                     </Link>
                   </li>
                   <li>
                     <Link className="dropdown-item" to={"/farm/add-farm/"}>
-                      Añadir finca
+                      Añadir granja
                     </Link>
                   </li>
                 </ul>
