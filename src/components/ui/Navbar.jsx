@@ -1,9 +1,7 @@
-// this is the component for the navbar that will be displayed on the top of the page
-
-import React from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../UserContext";
 
+/** this is the component for the navbar that will be displayed on the top of the page */
 function Navbar() {
   const { user, logout } = useUser();
   return (
@@ -40,17 +38,17 @@ function Navbar() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Fincas
+                  Granjas
                 </a>
                 <ul className="dropdown-menu">
                   <li>
                     <Link className="dropdown-item" to={"/farm/farms/"}>
-                      Ver fincas
+                      Ver granjas
                     </Link>
                   </li>
                   <li>
                     <Link className="dropdown-item" to={"/farm/add-farm/"}>
-                      Añadir finca
+                      Añadir granja
                     </Link>
                   </li>
                 </ul>
@@ -109,9 +107,8 @@ function Navbar() {
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
-            
                 >
-                  Perfil
+                  {user.username}
                 </a>
                 <ul className="dropdown-menu">
                   <li>
@@ -120,7 +117,11 @@ function Navbar() {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/logout" className="dropdown-item" onClick={logout}>
+                    <Link
+                      to="/logout"
+                      className="dropdown-item"
+                      onClick={logout}
+                    >
                       Cerrar sesión
                     </Link>
                   </li>

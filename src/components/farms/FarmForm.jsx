@@ -1,59 +1,33 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { getDepartments, getCities } from "../../api/supplierApi";
-import { farmApi } from "../../api/farmApi";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { Map } from "../Maps";
-import { SpanMandatory, FormButton } from "../ui/FormComponents";
-
+import useCitiesDepartments from "../../hooks/useCitiesDepartments";
+import usePostData from "../../hooks/usePostData";
+import api from "../../api/api";
+import { Map, LocationMap } from "../Maps";
 import styles from "../../pages/farms/Farms.module.css";
-import { set } from "react-hook-form";
 
 function FarmForm() {
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
+  const { data, loading, error, postData } = usePostData();
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [city, setCity] = useState("");
-  const [departments, setDepartments] = useState([]);
-  const [cities, setCities] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [loadingMap, setLoadingMap] = useState(true);
+  const [selectedFarm, setSelectedFarm] = useState(null);
 
-  // useEffect to fetch the departments and cities from the API
-  useEffect(() => {
-    // function to fetch the data
-    async function fetchData() {
-      try {
-        const responseDepartments = await getDepartments();
-        setDepartments(responseDepartments.data);
-        const responseCities = await getCities();
-        setCities(responseCities.data);
-      } catch (error) {
-        toast.error("Error al cargar los datos " + error.message, {
-          duration: 5000,
-        });
-      }
-    }
-    // call the function
-    fetchData();
-  }, []);
+  // here we setup the form hook to handle the form to create a new farm
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm();
 
-  // state to store the selected department
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const navigate = useNavigate();
+  const params = useParams();
 
-  // function to filter the cities by department
-  const filterCities = () => {
-    if (selectedDepartment) {
-      // return the cities that match the selected department
-      return cities.filter((city) => city.department.id == selectedDepartment);
-    }
-    // return an empty array if no department is selected
-    return [];
-  };
-
-  // function to handle the change of the department select
-  const handleDepartmentChange = (e) => {
-    setSelectedDepartment(e.target.value);
-  };
+  const { departments, cities } = useCitiesDepartments(selectedDepartment);
 
   // function to handle the click on the map and set the latitude and longitude inputs
   const handleMapClick = (latlng) => {
@@ -61,112 +35,179 @@ function FarmForm() {
     setLongitude(latlng.lng);
   };
 
-  const createFarm = (e) => {
-    e.preventDefault();
+  // submit function to send the post request to the server with the new data
+  const onSubmit = handleSubmit(async (formData) => {
     if (latitude === null || longitude === null) {
-      const userConfirmation = window.confirm(
-        "No has seleccionado la ubicación en el mapa. ¿Deseas continuar de todas formas?"
-      );
-      if (userConfirmation) {
-        // If user confirms, proceed with creating the farm with null latitude or longitude
-        createFarmRequest();
-      }
-    } else {
-      // If both latitude and longitude are not null, proceed with creating the farm
-      createFarmRequest();
+      window.alert("No has seleccionado la ubicación de la granja en el mapa");
+      return;
     }
+
+    // this is the final data that will be sent in the post request
+    const finalData = {
+      ...formData,
+      location: {
+        ...formData.location,
+        latitude: latitude,
+        longitude: longitude,
+      },
+    };
+
+    // if editing here goes the put request
+    if (params.id) {
+      console.log("editando");
+    } else {
+      try {
+        await postData("/farm/farms/", finalData);  // fix {data} is still null after post
+        //toast.success("La granja "+ data.name+ " fue añadida correctamente");
+        navigate("/farm/farms/");
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  });
+
+  // this effect is used to fill the form if editing
+  useEffect(() => {
+    async function loadFarm() {
+      if (params.id) {
+        try {
+          const { data } = await api.get(`/farm/farms/${params.id}/`);
+          setSelectedFarm(data);
+          setSelectedDepartment(data.location.city.department.id);
+          setValue("name", data.name);
+          setValue("location.address", data.location.address);
+          setValue("location.address", data.location.address);
+          setValue("department", data.location.city.department.id);
+          setValue("location.city", data.location.city.id);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoadingMap(false);
+        }
+      }
+    }
+    loadFarm();
+  }, [params.id, setSelectedFarm, setValue, selectedDepartment]);
+
+  // this handles the change in the department select component
+  const handleDepartmentChange = async (e) => {
+    setSelectedDepartment(e.target.value);
   };
 
-  // function to create a new farm
-  const createFarmRequest = () => {
-  farmApi
-    .post("/farm/farms/", {
-      name,
-      location: {
-        address,
-        latitude,
-        longitude,
-        city,
-      },
-    })
-    .then((res) => {
-      if (res.status === 201) {
-        toast.success(
-          "La finca " + name + " ha sido creado correctamente."
-        );
-        setName("");
-        setAddress("");
-        setLatitude(null);
-        setLongitude(null);
-        setCity("");
-      } else toast.error("Error al crear la finca " + name);
-    })
-    .catch((error) => {
-      // Handle error
-      alert("Error al crear la finca: " + error.message);
-    });
-};
-
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 mb-5">
       <div className="row d-flex justify-content-center align-items-center">
         <div className={`col-md-6 pb-3 ${styles.formPanel}`}>
-          <h3>Añadir nueva finca</h3>
+          <h3>Información granja</h3>
 
-          <form onSubmit={createFarm}>
+          <form onSubmit={onSubmit}>
             <div className="form-group">
               <label htmlFor="name">Nombre</label>
               <input
                 type="text"
                 className="form-control mb-2"
                 id="name"
-                onChange={(e) => setName(e.target.value)}
-                required
+                {...register("name", { required: "El nombre es obligatorio" })}
               />
+              {errors.name && (
+                <p className="text-danger">{errors.name.message}</p>
+              )}
               <label htmlFor="address">Dirección</label>
               <input
                 type="text"
                 className="form-control mb-2"
                 id="address"
-                onChange={(e) => setAddress(e.target.value)}
-                required
+                {...register("location.address", {
+                  required: "La dirección es obligatoria",
+                })}
               />
-              <h4>Selecciona la ubicación en el mapa</h4>
-              <Map onMapClick={handleMapClick} />
-              <label htmlFor="department">Departamento</label> <SpanMandatory />
+              {errors.location?.address && (
+                <p className="text-danger">{errors.location.address.message}</p>
+              )}
+              <h4>Ubicación de la granja en el mapa</h4>
+              {/*if editing this is the map*/}
+              {params.id ? (
+                loadingMap ? (
+                  <p>loading ...</p>
+                ) : (
+                  <LocationMap
+                    lat={selectedFarm.location.latitude}
+                    lng={selectedFarm.location.longitude}
+                    popupText={selectedFarm.location.address}
+                  />
+                )
+              ) : (
+                <Map onMapClick={handleMapClick} />
+              )}
+
+              <label htmlFor="department">Departamento</label>
               <select
-                required
                 className="form-select mb-2"
                 id="department"
+                name="department"
+                {...register("department", {
+                  required: "El departamento es obligatorio",
+                })}
                 onChange={handleDepartmentChange}
               >
-                <option value={null}>Selecciona el departamento</option>
-                {departments?.map((department, index) => (
-                  <option key={index} value={department.id}>
+                <option value="">Selecciona el departamento</option>
+                {departments.map((department) => (
+                  <option key={department.id} value={department.id}>
                     {department.name}
                   </option>
                 ))}
               </select>
-              <label htmlFor="city">Ciudad</label> <SpanMandatory />
+
+              <label htmlFor="city">Ciudad</label>
               <select
-                required
                 className="form-select mb-2"
                 id="city"
-                onChange={(e) => setCity(e.target.value)}
-                value={city}
+                name="city"
+                {...register("location.city", {
+                  required: "La ciudad es obligatoria",
+                })}
               >
-                <option value={null}>Selecciona la ciudad</option>
-                {filterCities().map((city, index) => (
-                  <option key={index} value={city.id}>
+                <option value="">Selecciona la ciudad</option>
+                {cities.map((city) => (
+                  <option key={city.id} value={city.id}>
                     {city.name}
                   </option>
                 ))}
               </select>
+              {errors.location?.city && (
+                <p className="text-danger">{errors.location.city.message}</p>
+              )}
             </div>
             <div className="d-flex justify-content-center align-items-center mt-3">
-              <button type="submit" className="btn btn-success">
-                Añadir finca
-              </button>
+              {params.id ? (
+                <div>
+                  <button
+                    className="btn btn-danger"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      const deleteFarm = window.confirm(
+                        "Estás seguro de que quieres eliminar la granja"
+                      );
+                      if (deleteFarm) {
+                        await api.delete(`/farm/farms/${params.id}/`);
+                        navigate("/farm/farms/");
+                      }
+                    }}
+                  >
+                    Eliminar granja
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Guardar cambios
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <button type="submit" className="btn btn-success">
+                    {loading ? "Cargando" : "Añadir granja"}
+                  </button>
+                  {error && <p>Error: {error}</p>}
+                </div>
+              )}
             </div>
           </form>
         </div>
