@@ -6,11 +6,9 @@ import api from "../api/api";
 function useCitiesDepartments(selectedDepartment) {
   const [filteredCities, setFilteredCities] = useState([]);
 
-  const {
-    data: departments,
-    loading: loadingDept,
-    error: errorDept,
-  } = useFetchData("/location/department/departments/");
+  const { data: departments } = useFetchData(
+    "/location/department/departments/"
+  );
 
   // this effect loads the data needed to filter the cities depending on the department_id
   useEffect(() => {
