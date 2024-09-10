@@ -1,5 +1,5 @@
 // these are the map components that are use for the forms and the list of farms and suppliers
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -40,7 +40,7 @@ const Map = ({ onMapClick }) => {
 // LocationMap component to show a map with a marker in a specific location
 const LocationMap = ({ lat, lng, popupText }) => {
   return (
-    <MapContainer center={[lat, lng]} zoom={13} style={{ height: "250px", width: "250px" }}>
+    <MapContainer center={[lat, lng]} zoom={13} style={{ height: "350px", width: "100%" }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

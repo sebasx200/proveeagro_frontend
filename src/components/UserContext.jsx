@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import userApi from '../api/userApi';
+import api from '../api/api';
 
 const UserContext = createContext(null);
 
@@ -34,7 +34,7 @@ export const UserProvider = ({ children }) => {
 
 const getLoggedInUser = async () => {
   try {
-    const response = await userApi.get('/login/user/profile/');
+    const response = await api.get('/login/user/profile/');
     return response.data;
   } catch (error) {
     console.error('Error al obtener el usuario logueado', error);

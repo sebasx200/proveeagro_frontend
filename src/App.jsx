@@ -1,4 +1,3 @@
-import React from "react";
 import PageTitle from "./components/pageTitle";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
@@ -10,6 +9,7 @@ import Suppliers from "./pages/suppliers/Suppliers";
 import AddSupplier from "./pages/suppliers/AddSupplier";
 import Farms from "./pages/farms/Farms";
 import AddFarm from "./pages/farms/AddFarm";
+import EditFarm from "./pages/farms/EditFarm";
 import UserProfile from "./pages/dashboard/UserProfile";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/ui/Navbar";
@@ -84,7 +84,7 @@ function App() {
               path="/farm/farms/"
               element={
                 <ProtectedRoute>
-                  <PageTitle title="Fincas" />
+                  <PageTitle title="Granjas" />
                   <Farms />
                 </ProtectedRoute>
               }
@@ -93,8 +93,17 @@ function App() {
               path="/farm/add-farm/"
               element={
                 <ProtectedRoute>
-                  <PageTitle title="Añadir finca" />
+                  <PageTitle title="Añadir granja" />
                   <AddFarm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/farm/farms/:id/"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Granja" />
+                  <EditFarm />
                 </ProtectedRoute>
               }
             />
