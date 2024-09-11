@@ -58,7 +58,7 @@ function FarmForm() {
     } else {
       try {
         await postData("/farm/farms/", finalData);  // fix {data} is still null after post
-        //toast.success("La granja "+ data.name+ " fue añadida correctamente");
+        toast.success("La granja "+ finalData.name+ " fue añadida correctamente");
         navigate("/farm/farms/");
       } catch (err) {
         console.error(err);
