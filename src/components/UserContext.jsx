@@ -1,9 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import api from '../api/api';
 
-const UserContext = createContext(null);
-
-export const useUser = () => useContext(UserContext);
+export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -40,4 +39,8 @@ const getLoggedInUser = async () => {
     console.error('Error al obtener el usuario logueado', error);
     return null;
   }
+};
+
+UserProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

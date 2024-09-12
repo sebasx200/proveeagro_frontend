@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { useUser } from "../UserContext";
+import useUser from "../../hooks/useUser";
 import { updateUser } from "../../api/userApi";
 import styles from "../../pages/dashboard/Dashboard.module.css";
 
