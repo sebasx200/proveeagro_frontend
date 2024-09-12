@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useUser } from "../UserContext";
+import useUser from "../../hooks/useUser";
 
 /** this is the component for the navbar that will be displayed on the top of the page */
 function Navbar() {

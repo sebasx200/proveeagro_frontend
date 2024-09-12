@@ -1,10 +1,11 @@
 import { useState } from "react";
 import userApi from "../../api/userApi";
-import { Form, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 import { toast } from "react-hot-toast";
-import { useUser } from '../UserContext';
+import useUser from "../../hooks/useUser";
+import PropTypes from 'prop-types';
 
 // import components
 import {
@@ -150,5 +151,9 @@ function FormLogin({ route }) {
     </FormPanel>
   );
 }
+
+FormLogin.propTypes = {
+  route: PropTypes.string.isRequired,
+};
 
 export default FormLogin;
