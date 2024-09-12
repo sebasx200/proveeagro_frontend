@@ -58,6 +58,7 @@ function FarmForm() {
     } else {
       try {
         postData("/farm/farms/", finalData);
+        await postData("/farm/farms/", finalData);  // fix {data} is still null after post
       } catch (err) {
         console.error(err.message);
       }
