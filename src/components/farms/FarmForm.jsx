@@ -36,7 +36,7 @@ function FarmForm() {
   };
 
   // submit function to send the post request to the server with the new data
-  const onSubmit = handleSubmit(async (formData) => {
+  const onSubmit = handleSubmit((formData) => {
     if (latitude === null || longitude === null) {
       window.alert("No has seleccionado la ubicación de la granja en el mapa");
       return;
@@ -57,14 +57,20 @@ function FarmForm() {
       console.log("editando");
     } else {
       try {
-        await postData("/farm/farms/", finalData);  // fix {data} is still null after post
-        //toast.success("La granja "+ data.name+ " fue añadida correctamente");
-        navigate("/farm/farms/");
+        postData("/farm/farms/", finalData);
       } catch (err) {
-        console.error(err);
+        console.error(err.message);
       }
     }
   });
+
+  // UseEffect to show a toast when the post data is sent
+  useEffect(() => {
+    if (data) {
+      toast.success("La granja " + data.name + " fue añadida correctamente");
+      navigate("/farm/farms/");
+    }
+  }, [data, navigate]);
 
   // this effect is used to fill the form if editing
   useEffect(() => {
