@@ -1,8 +1,11 @@
-# React + Vite
+# Proveeagro Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## This is the ProveeAgro frontend repository.
 
-Currently, two official plugins are available:
+Here you can find all the source code from the frontend apartment of the ProveeAgro project, which tarjet is helping providers and farmers to have a tool where they can storage their crucial information and access to it in a easier way.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project was created with Vite using React and JavaScript as main technologies.
+
+There are some dependencies need it for the project to work.
+
+For your convenience, we created a requirements.txt file with all the dependencies need it.
