@@ -156,7 +156,9 @@ function RegisterForm({ type }) {
                   </option>
                 ))}
               </select>
-
+              {errors.department && (
+                <p className="text-danger">{errors.department.message}</p>
+              )}
               <label htmlFor="city">Ciudad</label>
               <SpanMandatory />
               <select

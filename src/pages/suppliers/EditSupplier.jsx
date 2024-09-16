@@ -1,12 +1,12 @@
 import RegisterForm from "../../components/forms/RegisterForm";
 import styles from "./Suppliers.module.css";
 
-function AddSupplier() {
+function EditSupplier() {
   return (
-    <div className={`pb-5 ${styles.addSupplierPage}`}>
+    <div className={styles.addSupplierPage}>
       <RegisterForm type={"supplier"} />
     </div>
   );
 }
 
-export default AddSupplier;
+export default EditSupplier;

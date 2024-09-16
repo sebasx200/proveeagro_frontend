@@ -17,8 +17,8 @@ function FarmList() {
     navigate(`/farm/farms/${id}/`);
   };
 
-  if (errorFarms){
-    return <div>Error al cargar las fincas...</div>
+  if (errorFarms) {
+    return <div>Error al cargar las granjas...</div>;
   }
 
   return (
@@ -28,13 +28,13 @@ function FarmList() {
           <div className="row">
             <div className="d-flex justify-content-center align-items-center">
               <h5>
-                No tienes ninguna finca registrada. ¿Quieres añadir una finca?
+                No tienes ninguna granja registrada. ¿Quieres añadir una granja?
               </h5>
             </div>
             <div className="row">
               <div className="d-flex justify-content-center align-items-center">
                 <Link to="/farm/add-farm/" className="text-decoration-none">
-                  Añadir finca
+                  Añadir granja
                 </Link>
               </div>
             </div>
