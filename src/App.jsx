@@ -7,6 +7,7 @@ import Home from "./pages/dashboard/Home";
 import Agenda from "./pages/dashboard/Agenda";
 import Suppliers from "./pages/suppliers/Suppliers";
 import AddSupplier from "./pages/suppliers/AddSupplier";
+import EditSupplier from "./pages/suppliers/EditSupplier";
 import Farms from "./pages/farms/Farms";
 import AddFarm from "./pages/farms/AddFarm";
 import EditFarm from "./pages/farms/EditFarm";
@@ -77,6 +78,15 @@ function App() {
                 <ProtectedRoute>
                   <PageTitle title="Añadir proveedor" />
                   <AddSupplier />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/supplier/suppliers/:id/"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Proveedor" />
+                  <EditSupplier />
                 </ProtectedRoute>
               }
             />
