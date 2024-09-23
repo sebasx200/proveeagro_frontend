@@ -26,8 +26,23 @@ function RegisterForm({ type }) {
   // this state works for the selected farms in the modal
   const [selectedFarms, setselectedFarms] = useState([]);
 
-  // custom hook for post initialization
-  const { data, loading, error, postData } = usePostData();
+  // custom hook for post new data initialization
+  const {
+    data: sentData,
+    loading: loadingData,
+    error: errorData,
+    postData,
+  } = usePostData();
+
+  // custom hook to post the farms and supplier for the agenda
+  const {
+    data: sentFarmSupplier,
+    loading: loadingFarmSupplier,
+    error: errorFarmSupplier,
+    postData: postFarmSupplier,
+  } = usePostData();
+
+  // custom hook to the farms for the modal initialization
   const {
     data: farms,
     loading: loadingFarms,
@@ -58,7 +73,17 @@ function RegisterForm({ type }) {
 
   // this handles the button to accept the selected farms by the moment
   const handleAddToAgenda = () => {
-    console.log("farms: ", selectedFarms);
+    const dataToAgenda = { farm: null, supplier: null };
+
+    if (selectedFarms.length !== 0) {
+      for (const farm of selectedFarms) {
+        dataToAgenda.farm = farm.id;
+        dataToAgenda.supplier = selectedItem.id;
+        postFarmSupplier("/farm/farm_suppliers/", dataToAgenda);
+      }
+    } else {
+      window.alert("No ha seleccionado ninguna granja");
+    }
   };
 
   // setup form hook
@@ -105,19 +130,18 @@ function RegisterForm({ type }) {
     }
   });
 
-  // Effect to show a toast when post data is sent
+  // Effect to show a toast when post data is sent or to show a toast when a supplier is releated with farms
   useEffect(() => {
-    if (data) {
-      toast.success(
-        `${type.charAt(0).toUpperCase() + type.slice(1)} ${data.name} ${
-          type === "farm"
-            ? "fue añadida correctamente"
-            : "fue añadido correctamente"
-        }`
-      );
+    if (sentData) {
+      toast.success(sentData.name + " se registró correctamente");
       navigate(`/${type}/${type}s/`);
     }
-  }, [data, navigate, type]);
+
+    if (sentFarmSupplier) {
+      toast.success("El proveedor fue agendado correctamente");
+      setShow(false);
+    }
+  }, [sentData, sentFarmSupplier, navigate, type]);
 
   // Effect to load item if editing
   useEffect(() => {
@@ -145,11 +169,6 @@ function RegisterForm({ type }) {
   const handleDepartmentChange = (e) => {
     setSelectedDepartment(e.target.value);
   };
-  
-  // if there is any error getting the farms from the hook
-  if (errorFarms) {
-    return <div>Error getting farms...</div>;
-  }
 
   return (
     <div className="container mt-5">
@@ -228,7 +247,7 @@ function RegisterForm({ type }) {
                 <p className="text-danger">{errors.location.city.message}</p>
               )}
               <div className="container text-center mt-4 mb-2">
-                {error && <p>Error: {error}</p>}
+                {errorData && <p>Error: {errorData}</p>}
 
                 <div className="row gap-3">
                   {params.id ? (
@@ -255,7 +274,7 @@ function RegisterForm({ type }) {
                     <FormButton
                       type={"submit"}
                       className={"btn btn-success"}
-                      text={loading ? "Cargando" : "Añadir"}
+                      text={loadingData ? "Cargando" : "Añadir"}
                     />
                   )}
                 </div>
@@ -289,19 +308,23 @@ function RegisterForm({ type }) {
                   </>
                 )}
               </ListGroup>
+              {/* if there is any error getting the farms from the hook */}
+              {errorFarms && (<div>Error obteniendo las granjas</div>)}
             </>
           }
           propsFooter={
             <>
               <Button variant="success" onClick={handleAddToAgenda}>
-                Añadir a Mi Agenda
+                {loadingFarmSupplier ? "Cargando..." : "Añadir a la aganda"}
               </Button>
               <Button variant="secondary" onClick={handleClose}>
                 Cerrar
               </Button>
+              {errorFarmSupplier && <p className="text-danger">Error: {errorFarmSupplier}</p>}
             </>
           }
         />
+        {/* This are the maps to see the location using lat and lng */}
         <div className="col-md-7">
           <h3>Mapa</h3>
           {params.id ? (
