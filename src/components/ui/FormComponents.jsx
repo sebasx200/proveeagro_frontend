@@ -17,9 +17,9 @@ function ToggleButton({ itemID, togglePasswordVisibility, showPassword }) {
   );
 }
 
-function FormButton({ itemID, text, className }) {
+function FormButton({ itemID, text, className, onClick }) {
   return (
-    <button itemID={itemID} className={className}>
+    <button itemID={itemID} className={className} onClick={onClick}>
       {text}
     </button>
   );

@@ -4,18 +4,87 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import useCitiesDepartments from "../../hooks/useCitiesDepartments";
 import usePostData from "../../hooks/usePostData";
+import useFetchData from "../../hooks/useFetchData";
 import api from "../../api/api";
 import { Map, LocationMap } from "../Maps";
 import { SpanMandatory, FormButton } from "../ui/FormComponents";
 import styles from "../../pages/farms/Farms.module.css";
+import FarmSupplierModal from "../modals/FarmSupplierModal";
+import Button from "react-bootstrap/Button";
+import ListGroup from "react-bootstrap/ListGroup";
+import PropTypes from "prop-types";
 
+/** This is the form for adding and editing farms and suppliers */
 function RegisterForm({ type }) {
-  const { data, loading, error, postData } = usePostData();
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [loadingMap, setLoadingMap] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
+  // this is the state to pass the endpoint to the fetch hook
+  const [endpoint, setEndpoint] = useState(null);
+  // this state works for the selected farms in the modal
+  const [selectedFarms, setselectedFarms] = useState([]);
+
+  // custom hook for post new data initialization
+  const {
+    data: sentData,
+    loading: loadingData,
+    error: errorData,
+    postData,
+  } = usePostData();
+
+  // custom hook to post the farms and supplier for the agenda
+  const {
+    data: sentFarmSupplier,
+    loading: loadingFarmSupplier,
+    error: errorFarmSupplier,
+    postData: postFarmSupplier,
+  } = usePostData();
+
+  // custom hook to the farms for the modal initialization
+  const {
+    data: farms,
+    loading: loadingFarms,
+    error: errorFarms,
+  } = useFetchData(endpoint);
+
+  // this is the state to handle the farm_supplier modal
+  const [show, setShow] = useState(false);
+
+  // this handles the closing of the modal
+  const handleClose = () => setShow(false);
+  // this handles the opening of the modal and set the endpoint to the fetch hook
+  const handleShow = (e) => {
+    e.preventDefault();
+    setEndpoint("/farm/farms/");
+    setShow(true);
+  };
+
+  // this function handles the selected farms to work with them
+  const handleSelectedFarms = (farm) => {
+    // Si el item ya está seleccionado, lo quitamos; si no, lo añadimos
+    if (selectedFarms.includes(farm)) {
+      setselectedFarms(selectedFarms.filter((i) => i !== farm));
+    } else {
+      setselectedFarms([...selectedFarms, farm]);
+    }
+  };
+
+  // this handles the button to accept the selected farms by the moment
+  const handleAddToAgenda = () => {
+    const dataToAgenda = { farm: null, supplier: null };
+
+    if (selectedFarms.length !== 0) {
+      for (const farm of selectedFarms) {
+        dataToAgenda.farm = farm.id;
+        dataToAgenda.supplier = selectedItem.id;
+        postFarmSupplier("/farm/farm_suppliers/", dataToAgenda);
+      }
+    } else {
+      window.alert("No ha seleccionado ninguna granja");
+    }
+  };
 
   // setup form hook
   const {
@@ -61,19 +130,18 @@ function RegisterForm({ type }) {
     }
   });
 
-  // Effect to show a toast when post data is sent
+  // Effect to show a toast when post data is sent or to show a toast when a supplier is releated with farms
   useEffect(() => {
-    if (data) {
-      toast.success(
-        `${type.charAt(0).toUpperCase() + type.slice(1)} ${data.name} ${
-          type === "farm"
-            ? "fue añadida correctamente"
-            : "fue añadido correctamente"
-        }`
-      );
+    if (sentData) {
+      toast.success(sentData.name + " se registró correctamente");
       navigate(`/${type}/${type}s/`);
     }
-  }, [data, navigate, type]);
+
+    if (sentFarmSupplier) {
+      toast.success("El proveedor fue agendado correctamente");
+      setShow(false);
+    }
+  }, [sentData, sentFarmSupplier, navigate, type]);
 
   // Effect to load item if editing
   useEffect(() => {
@@ -178,19 +246,85 @@ function RegisterForm({ type }) {
               {errors.location?.city && (
                 <p className="text-danger">{errors.location.city.message}</p>
               )}
-
               <div className="container text-center mt-4 mb-2">
-                <FormButton
-                  type="submit"
-                  text={params.id ? "Guardar cambios" : "Añadir"}
-                  className={`btn ${params.id ? "btn-primary" : "btn-success"}`}
-                />
-                {error && <p>Error: {error}</p>}
+                {errorData && <p>Error: {errorData}</p>}
+
+                <div className="row gap-3">
+                  {params.id ? (
+                    <>
+                      <FormButton
+                        type="submit"
+                        text={"Guardar cambios"}
+                        className={"btn btn-primary"}
+                      />
+                      <FormButton
+                        type="submit"
+                        text={"Eliminar"}
+                        className={"btn btn-danger"}
+                      />
+                      {type === "supplier" && (
+                        <FormButton
+                          text={"Añadir a la agenda"}
+                          className={"btn btn-success"}
+                          onClick={handleShow}
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <FormButton
+                      type={"submit"}
+                      className={"btn btn-success"}
+                      text={loadingData ? "Cargando" : "Añadir"}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </form>
         </div>
-
+        {/* This is the farm_supplier modal */}
+        <FarmSupplierModal
+          show={show}
+          handleClose={handleClose}
+          title={"Selecciona las fincas para agendar el proveedor"}
+          propsBody={
+            <>
+              <ListGroup>
+                {loadingFarms ? (
+                  <div>loading farms...</div>
+                ) : (
+                  <>
+                    {farms.map((farm, index) => (
+                      <ListGroup.Item
+                        action
+                        variant="success"
+                        active={selectedFarms.includes(farm)}
+                        onClick={() => handleSelectedFarms(farm)}
+                        key={index}
+                      >
+                        {farm.name}
+                      </ListGroup.Item>
+                    ))}
+                  </>
+                )}
+              </ListGroup>
+              {/* if there is any error getting the farms from the hook */}
+              {errorFarms && (<div>Error obteniendo las granjas</div>)}
+            </>
+          }
+          propsFooter={
+            <>
+              <Button variant="success" onClick={handleAddToAgenda}>
+                {loadingFarmSupplier ? "Cargando..." : "Añadir a la aganda"}
+              </Button>
+              <Button variant="secondary" onClick={handleClose}>
+                Cerrar
+              </Button>
+              {errorFarmSupplier && <p className="text-danger">Error: {errorFarmSupplier}</p>}
+            </>
+          }
+        />
+        {/* This are the maps to see the location using lat and lng */}
         <div className="col-md-7">
           <h3>Mapa</h3>
           {params.id ? (
@@ -211,5 +345,10 @@ function RegisterForm({ type }) {
     </div>
   );
 }
+
+// the type is set to be a string
+RegisterForm.propTypes = {
+  type: PropTypes.string.isRequired,
+};
 
 export default RegisterForm;
