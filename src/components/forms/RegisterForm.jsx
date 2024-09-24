@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import useCitiesDepartments from "../../hooks/useCitiesDepartments";
 import usePostData from "../../hooks/usePostData";
 import useFetchData from "../../hooks/useFetchData";
+import usePutData from "../../hooks/usePutData";
 import api from "../../api/api";
 import { Map, LocationMap } from "../Maps";
 import { SpanMandatory, FormButton } from "../ui/FormComponents";
@@ -49,6 +50,12 @@ function RegisterForm({ type }) {
     error: errorFarms,
   } = useFetchData(endpoint);
 
+  const {
+    data: updatedData,
+    loading: loadingUpdate,
+    error: errorUpdate,
+    putData: udpateItem,
+  } = usePutData();
   // this is the state to handle the farm_supplier modal
   const [show, setShow] = useState(false);
 
@@ -120,7 +127,7 @@ function RegisterForm({ type }) {
     };
 
     if (params.id) {
-      console.log(`Editando ${type}`);
+      udpateItem(`/${type}/${type}s/${params.id}/`, finalData);
     } else {
       try {
         postData(`/${type}/${type}s/`, finalData);
@@ -141,7 +148,11 @@ function RegisterForm({ type }) {
       toast.success("El proveedor fue agendado correctamente");
       setShow(false);
     }
-  }, [sentData, sentFarmSupplier, navigate, type]);
+
+    if (updatedData) {
+      toast.success(updatedData.name + " se actualizó correctamente");
+    }
+  }, [sentData, params.id, sentFarmSupplier, updatedData, navigate, type]);
 
   // Effect to load item if editing
   useEffect(() => {
@@ -155,6 +166,8 @@ function RegisterForm({ type }) {
           setValue("location.address", data.location.address);
           setValue("department", data.location.city.department.id);
           setValue("location.city", data.location.city.id);
+          setLatitude(data.location.latitud);
+          setLongitude(data.location.longitude);
         } catch (err) {
           console.error(err);
         } finally {
@@ -168,6 +181,17 @@ function RegisterForm({ type }) {
   // Handles department change
   const handleDepartmentChange = (e) => {
     setSelectedDepartment(e.target.value);
+  };
+
+  // this handles the delete of the item in the form
+  const handleDeleteItem = async (e, itemId) => {
+    e.preventDefault();
+    const deleteConfirmation = window.confirm("¿Eliminar registro?");
+    if (deleteConfirmation) {
+      await api.delete(`/${type}/${type}s/${itemId}/`);
+      toast.success("Se eliminó correctamente el registro");
+      navigate(`/${type}/${type}s/`);
+    }
   };
 
   return (
@@ -248,19 +272,20 @@ function RegisterForm({ type }) {
               )}
               <div className="container text-center mt-4 mb-2">
                 {errorData && <p>Error: {errorData}</p>}
-
+                {errorUpdate && <p>Error: {errorUpdate}</p>}
                 <div className="row gap-3">
                   {params.id ? (
                     <>
                       <FormButton
                         type="submit"
-                        text={"Guardar cambios"}
+                        text={loadingUpdate ? "Cargando" : "Guardar cambios"}
                         className={"btn btn-primary"}
                       />
                       <FormButton
                         type="submit"
                         text={"Eliminar"}
                         className={"btn btn-danger"}
+                        onClick={(e) => handleDeleteItem(e, params.id)}
                       />
                       {type === "supplier" && (
                         <FormButton
@@ -309,7 +334,7 @@ function RegisterForm({ type }) {
                 )}
               </ListGroup>
               {/* if there is any error getting the farms from the hook */}
-              {errorFarms && (<div>Error obteniendo las granjas</div>)}
+              {errorFarms && <div>Error obteniendo las granjas</div>}
             </>
           }
           propsFooter={
@@ -320,7 +345,9 @@ function RegisterForm({ type }) {
               <Button variant="secondary" onClick={handleClose}>
                 Cerrar
               </Button>
-              {errorFarmSupplier && <p className="text-danger">Error: {errorFarmSupplier}</p>}
+              {errorFarmSupplier && (
+                <p className="text-danger">Error: {errorFarmSupplier}</p>
+              )}
             </>
           }
         />
