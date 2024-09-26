@@ -127,7 +127,7 @@ function RegisterForm({ type }) {
     };
 
     if (params.id) {
-      udpateItem(`/${type}/${type}s/${params.id}/`, finalData);
+      udpateItem(`/${type}/${type}s/`, finalData);
     } else {
       try {
         postData(`/${type}/${type}s/`, finalData);
@@ -151,6 +151,7 @@ function RegisterForm({ type }) {
 
     if (updatedData) {
       toast.success(updatedData.name + " se actualizó correctamente");
+      console.log(updatedData)
     }
   }, [sentData, params.id, sentFarmSupplier, updatedData, navigate, type]);
 
@@ -166,7 +167,7 @@ function RegisterForm({ type }) {
           setValue("location.address", data.location.address);
           setValue("department", data.location.city.department.id);
           setValue("location.city", data.location.city.id);
-          setLatitude(data.location.latitud);
+          setLatitude(data.location.latitude);
           setLongitude(data.location.longitude);
         } catch (err) {
           console.error(err);
@@ -362,6 +363,7 @@ function RegisterForm({ type }) {
                 lat={selectedItem.location.latitude}
                 lng={selectedItem.location.longitude}
                 popupText={selectedItem.location.address}
+                onMapClick={handleMapClick}
               />
             )
           ) : (

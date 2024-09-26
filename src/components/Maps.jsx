@@ -38,13 +38,35 @@ const Map = ({ onMapClick }) => {
 };
 
 // LocationMap component to show a map with a marker in a specific location
-const LocationMap = ({ lat, lng, popupText }) => {
+const LocationMap = ({ lat, lng, popupText, onMapClick }) => {
+
+  const [markerPosition, setMarkerPosition] = useState(null);
+
+  const MapEvents = () => {
+    useMapEvents({
+      click: (e) => {
+        const { lat, lng } = e.latlng;
+        setMarkerPosition([lat, lng]);
+        onMapClick(e.latlng);
+      },
+    });
+    return null;
+  };
+
   return (
     <MapContainer center={[lat, lng]} zoom={13} style={{ height: "350px", width: "100%" }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
+      <MapEvents />
+      {markerPosition && (
+        <Marker position={markerPosition}>
+          <Popup>
+            Dirección exacta del proveedor
+          </Popup>
+        </Marker>
+      )}
       <Marker position={[lat, lng]}>
         <Popup>
           {popupText}
