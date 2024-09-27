@@ -99,6 +99,7 @@ function RegisterForm({ type }) {
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm();
   const navigate = useNavigate();
   const params = useParams();
@@ -108,6 +109,11 @@ function RegisterForm({ type }) {
   const handleMapClick = (latlng) => {
     setLatitude(latlng.lat);
     setLongitude(latlng.lng);
+  };
+
+  const handleMarkerRemove = () => {
+    setLatitude(selectedItem.location.latitude);
+    setLongitude(selectedItem.location.longitude);
   };
 
   // submit function
@@ -127,7 +133,14 @@ function RegisterForm({ type }) {
     };
 
     if (params.id) {
-      udpateItem(`/${type}/${type}s/${params.id}/`, finalData);
+      try {
+        const confirmUpdate = window.confirm("¿Quieres actualizar los datos?");
+        if (confirmUpdate) {
+          udpateItem(`/${type}/${type}s/${params.id}/`, finalData);
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
     } else {
       try {
         postData(`/${type}/${type}s/`, finalData);
@@ -166,7 +179,7 @@ function RegisterForm({ type }) {
           setValue("location.address", data.location.address);
           setValue("department", data.location.city.department.id);
           setValue("location.city", data.location.city.id);
-          setLatitude(data.location.latitud);
+          setLatitude(data.location.latitude);
           setLongitude(data.location.longitude);
         } catch (err) {
           console.error(err);
@@ -176,11 +189,16 @@ function RegisterForm({ type }) {
       }
     }
     loadItem();
-  }, [params.id, setValue, selectedDepartment, type]);
+  }, [params.id, setValue, type]);
 
   // Handles department change
   const handleDepartmentChange = (e) => {
     setSelectedDepartment(e.target.value);
+  };
+
+  // Handles city change
+  const handleCityChange = (e) => {
+    setValue("location.city", e.target.value);
   };
 
   // this handles the delete of the item in the form
@@ -255,7 +273,9 @@ function RegisterForm({ type }) {
               <SpanMandatory />
               <select
                 className="form-select mb-2"
-                id="city"
+                id="location.city"
+                value={watch("location.city")}
+                onChange={handleCityChange}
                 {...register("location.city", {
                   required: "La ciudad es obligatoria",
                 })}
@@ -362,6 +382,8 @@ function RegisterForm({ type }) {
                 lat={selectedItem.location.latitude}
                 lng={selectedItem.location.longitude}
                 popupText={selectedItem.location.address}
+                onMapClick={handleMapClick}
+                onMarkerRemove={handleMarkerRemove}
               />
             )
           ) : (
