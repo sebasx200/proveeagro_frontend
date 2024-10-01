@@ -6,6 +6,7 @@ import useCitiesDepartments from "../../hooks/useCitiesDepartments";
 import usePostData from "../../hooks/usePostData";
 import useFetchData from "../../hooks/useFetchData";
 import usePutData from "../../hooks/usePutData";
+import useDeleteData from "../../hooks/useDeleteData";
 import api from "../../api/api";
 import { Map, LocationMap } from "../Maps";
 import { SpanMandatory, FormButton } from "../ui/FormComponents";
@@ -43,7 +44,7 @@ function RegisterForm({ type }) {
     postData: postFarmSupplier,
   } = usePostData();
 
-  // custom hook to the farms for the modal initialization
+  // custom hook to fetch the farms for the modal initialization
   const {
     data: farms,
     loading: loadingFarms,
@@ -56,6 +57,13 @@ function RegisterForm({ type }) {
     error: errorUpdate,
     putData: udpateItem,
   } = usePutData();
+
+  const {
+    loading: loadingDelete,
+    error: errorDelete,
+    deleteData: removeData,
+  } = useDeleteData();
+
   // this is the state to handle the farm_supplier modal
   const [show, setShow] = useState(false);
 
@@ -99,6 +107,7 @@ function RegisterForm({ type }) {
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm();
   const navigate = useNavigate();
   const params = useParams();
@@ -108,6 +117,11 @@ function RegisterForm({ type }) {
   const handleMapClick = (latlng) => {
     setLatitude(latlng.lat);
     setLongitude(latlng.lng);
+  };
+
+  const handleMarkerRemove = () => {
+    setLatitude(selectedItem.location.latitude);
+    setLongitude(selectedItem.location.longitude);
   };
 
   // submit function
@@ -127,7 +141,14 @@ function RegisterForm({ type }) {
     };
 
     if (params.id) {
-      udpateItem(`/${type}/${type}s/${params.id}/`, finalData);
+      try {
+        const confirmUpdate = window.confirm("¿Quieres actualizar los datos?");
+        if (confirmUpdate) {
+          udpateItem(`/${type}/${type}s/${params.id}/`, finalData);
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
     } else {
       try {
         postData(`/${type}/${type}s/`, finalData);
@@ -152,7 +173,14 @@ function RegisterForm({ type }) {
     if (updatedData) {
       toast.success(updatedData.name + " se actualizó correctamente");
     }
-  }, [sentData, params.id, sentFarmSupplier, updatedData, navigate, type]);
+  }, [
+    sentData,
+    params.id,
+    sentFarmSupplier,
+    updatedData,
+    navigate,
+    type,
+  ]);
 
   // Effect to load item if editing
   useEffect(() => {
@@ -166,7 +194,7 @@ function RegisterForm({ type }) {
           setValue("location.address", data.location.address);
           setValue("department", data.location.city.department.id);
           setValue("location.city", data.location.city.id);
-          setLatitude(data.location.latitud);
+          setLatitude(data.location.latitude);
           setLongitude(data.location.longitude);
         } catch (err) {
           console.error(err);
@@ -176,20 +204,25 @@ function RegisterForm({ type }) {
       }
     }
     loadItem();
-  }, [params.id, setValue, selectedDepartment, type]);
+  }, [params.id, setValue, type]);
 
   // Handles department change
   const handleDepartmentChange = (e) => {
     setSelectedDepartment(e.target.value);
   };
 
+  // Handles city change
+  const handleCityChange = (e) => {
+    setValue("location.city", e.target.value);
+  };
+
   // this handles the delete of the item in the form
-  const handleDeleteItem = async (e, itemId) => {
+  const handleDeleteItem = (e, itemId) => {
     e.preventDefault();
     const deleteConfirmation = window.confirm("¿Eliminar registro?");
     if (deleteConfirmation) {
-      await api.delete(`/${type}/${type}s/${itemId}/`);
-      toast.success("Se eliminó correctamente el registro");
+      removeData(`/${type}/${type}s/${itemId}/`);
+      toast.success("El registro fue eliminado correctamente");
       navigate(`/${type}/${type}s/`);
     }
   };
@@ -256,6 +289,8 @@ function RegisterForm({ type }) {
               <select
                 className="form-select mb-2"
                 id="city"
+                value={watch("location.city")}
+                onChange={handleCityChange}
                 {...register("location.city", {
                   required: "La ciudad es obligatoria",
                 })}
@@ -273,6 +308,7 @@ function RegisterForm({ type }) {
               <div className="container text-center mt-4 mb-2">
                 {errorData && <p>Error: {errorData}</p>}
                 {errorUpdate && <p>Error: {errorUpdate}</p>}
+                {errorDelete && <p>Error: {errorDelete}</p>}
                 <div className="row gap-3">
                   {params.id ? (
                     <>
@@ -283,7 +319,7 @@ function RegisterForm({ type }) {
                       />
                       <FormButton
                         type="submit"
-                        text={"Eliminar"}
+                        text={loadingDelete ? "Cargando" : "Eliminar"}
                         className={"btn btn-danger"}
                         onClick={(e) => handleDeleteItem(e, params.id)}
                       />
@@ -311,7 +347,7 @@ function RegisterForm({ type }) {
         <FarmSupplierModal
           show={show}
           handleClose={handleClose}
-          title={"Selecciona las fincas para agendar el proveedor"}
+          title={"Selecciona las granjas para agendar el proveedor"}
           propsBody={
             <>
               <ListGroup>
@@ -362,6 +398,8 @@ function RegisterForm({ type }) {
                 lat={selectedItem.location.latitude}
                 lng={selectedItem.location.longitude}
                 popupText={selectedItem.location.address}
+                onMapClick={handleMapClick}
+                onMarkerRemove={handleMarkerRemove}
               />
             )
           ) : (
