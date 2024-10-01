@@ -3,8 +3,8 @@ import AgendaList from "../../components/dashboard/AgendaList";
 
 function Agenda() {
   return (
-    <div>
-      <div className={`${styles.agendaPage}`}>
+    <div className={styles.agendaPage}>
+      <div className={`container mt-5 ${styles.agendaPanel}`}>
         <AgendaList />
       </div>
     </div>
