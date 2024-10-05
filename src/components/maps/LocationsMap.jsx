@@ -20,15 +20,19 @@ const LocationsMap = ({ locations }) => {
       />
       <FullscreenControl />
       <LocateControl />
-      {locations.every((location) => location.length === 2) && (
-        <>
-          {locations.map((location, index) => (
-            <Marker key={index} position={location}>
-              <Popup>Ubicación exacta</Popup>
-            </Marker>
-          ))}
-        </>
-      )}
+      {locations.map((location, index) => (
+        <Marker
+          key={index}
+          position={[location.location.latitude, location.location.longitude]}
+        >
+          <Popup>
+            <strong>{location.name}</strong><br />
+            Dirección: {location.location.address} <br />
+            Ciudad: {location.location.city.name}<br />
+            Departamento: {location.location.city.department.name}
+          </Popup>
+        </Marker>
+      ))}
     </MapContainer>
   );
 };
