@@ -4,7 +4,7 @@ import UserData from "../../components/dashboard/UserData";
 function UserProfile() {
   return (
     <div>
-      <div className={styles.agendaPage}>
+      <div className={styles.backgroundPages}>
         <UserData />
       </div>
     </div>

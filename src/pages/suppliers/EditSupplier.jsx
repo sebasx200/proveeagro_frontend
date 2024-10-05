@@ -1,9 +1,9 @@
 import RegisterForm from "../../components/forms/RegisterForm";
-import styles from "./Suppliers.module.css";
+import styles from "../dashboard/Dashboard.module.css";
 
 function EditSupplier() {
   return (
-    <div className={styles.addSupplierPage}>
+    <div className={styles.backgroundPages}>
       <RegisterForm type={"supplier"} />
     </div>
   );

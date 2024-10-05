@@ -1,9 +1,9 @@
 import SupplierList from "../../components/suppliers/SupplierList";
-import styles from "./Suppliers.module.css";
+import styles from "../dashboard/Dashboard.module.css";
 
 function Suppliers() {
   return (
-    <div className={`pb-5 ${styles.supplierPage}`}>
+    <div className={`pb-5 ${styles.backgroundPages}`}>
       <div className="container mt-5">
         <SupplierList />
       </div>
