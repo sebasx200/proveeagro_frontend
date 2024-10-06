@@ -5,7 +5,7 @@ import FullscreenControl from "./control/FullscreenControl";
 import LocateControl from "./control/LocateControl";
 
 // this is the map component that is used to show a list of locations
-const LocationsMap = ({ locations }) => {
+const LocationsMap = ({ data }) => {
   const locationMedellin = [6.25184, -75.56359]; // medellin is the default city
 
   return (
@@ -20,26 +20,34 @@ const LocationsMap = ({ locations }) => {
       />
       <FullscreenControl />
       <LocateControl />
-      {locations.map((location, index) => (
-        <Marker
-          key={index}
-          position={[location.location.latitude, location.location.longitude]}
-        >
-          <Popup>
-            <strong>{location.name}</strong><br />
-            Dirección: {location.location.address} <br />
-            Ciudad: {location.location.city.name}<br />
-            Departamento: {location.location.city.department.name}
-          </Popup>
-        </Marker>
-      ))}
+      {data ? (
+        <>
+          {data.map((item, index) => (
+            <Marker
+              key={index}
+              position={[item.location.latitude, item.location.longitude]}
+            >
+              <Popup>
+                <strong>{item.name}</strong>
+                <br />
+                Dirección: {item.location.address} <br />
+                Ciudad: {item.location.city.name}
+                <br />
+                Departamento: {item.location.city.department.name}
+              </Popup>
+            </Marker>
+          ))}
+        </>
+      ) : (
+        <div>No se proporcianaron ubicaciones en el mapa</div>
+      )}
     </MapContainer>
   );
 };
 
 // the ProTypes are added to get the array of locations correctly
 LocationsMap.propTypes = {
-  locations: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
 };
 
 export default LocationsMap;

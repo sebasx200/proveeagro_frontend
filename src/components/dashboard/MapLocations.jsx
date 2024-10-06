@@ -4,26 +4,52 @@ import useUser from "../../hooks/useUser";
 import { useEffect, useState } from "react";
 
 function MapLocations() {
-  const [locations, setLocations] = useState(null);
   const [filterSelect, setFilterSelect] = useState(null);
   const { user } = useUser();
 
   const {
-    data: allLocations,
+    data: farmSuppliers,
     loading: loadingLocations,
     error: errorLocations,
   } = useFetchData("location/farms_suppliers_locations/");
 
+  const [farmLocations, setFarmLocations] = useState([]);
+  const [supplierLocations, setSupplierLocations] = useState([]);
+  const [allLocations, setAllLocations] = useState([]);
+  const [selection, setSelection] = useState(null);
+
   useEffect(() => {
-    const filtered = allLocations.filter((object) => {
-      if (filterSelect === "1") return object.suppliers; // All suppliers
-      if (filterSelect === "2") return object.suppliers.created_by === user.id; // Added by current user
-      if (filterSelect === "3")
-        return object.suppliers.is_added_by_superuser === true; // Suppliers added by superusers
+    if (farmSuppliers) {
+      const farms = [];
+      const suppliers = [];
+
+      for (const item of farmSuppliers) {
+        if (item.farms) {
+          farms.push(...item.farms);
+        }
+        if (item.suppliers) {
+          suppliers.push(...item.suppliers);
+        }
+      }
+      setFarmLocations(farms);
+      setSupplierLocations(suppliers);
+    }
+  }, [farmSuppliers]);
+
+  useEffect(() => {
+    if (farmLocations && supplierLocations) {
+      setAllLocations([...supplierLocations, ...farmLocations]);
+    }
+  }, [farmLocations, supplierLocations]);
+
+  useEffect(() => {
+    const filtered = allLocations.filter((item) => {
+      if (filterSelect === "1") return true; // All suppliers
+      if (filterSelect === "2") return item.created_by === user.id; // Added by current user
+      if (filterSelect === "3") return item.is_added_by_superuser === true; // Suppliers added by superusers
       return true;
-      
     });
-    setLocations(filtered);
+    setSelection(filtered);
   }, [filterSelect, allLocations, user]);
 
   const handleFilter = (e) => {
@@ -51,7 +77,13 @@ function MapLocations() {
       {loadingLocations ? (
         <div>Cargando ubicaciones...</div>
       ) : (
-        <>{locations && <LocationsMap locations={locations} />}</>
+        <>
+          {selection ? (
+            <LocationsMap data={selection} />
+          ) : (
+            <div>No se proporcianaron ubicaciones en el mapa</div>
+          )}
+        </>
       )}
       {errorLocations && <p className="text-danger">Error: {errorLocations}</p>}
     </div>
