@@ -3,6 +3,16 @@ import "leaflet/dist/leaflet.css";
 import PropTypes from "prop-types";
 import FullscreenControl from "./control/FullscreenControl";
 import LocateControl from "./control/LocateControl";
+import L from "leaflet";
+
+// Define custom red marker icon
+const redIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 // this is the map component that is used to show a list of locations
 const LocationsMap = ({ data }) => {
@@ -22,21 +32,32 @@ const LocationsMap = ({ data }) => {
       <LocateControl />
       {data ? (
         <>
-          {data.map((item, index) => (
-            <Marker
-              key={index}
-              position={[item.location.latitude, item.location.longitude]}
-            >
-              <Popup>
-                <strong>{item.name}</strong>
-                <br />
-                Dirección: {item.location.address} <br />
-                Ciudad: {item.location.city.name}
-                <br />
-                Departamento: {item.location.city.department.name}
-              </Popup>
-            </Marker>
-          ))}
+          {data.map((item, index) => {
+            // Determine the icon based on the type
+            let icon;
+            if (item.type === 'farm') {
+              icon = redIcon; // Use red icon for parks
+            } else {
+              icon = L.Icon.Default.prototype; // Default icon for other types
+            }
+
+            return (
+              <Marker
+                key={index}
+                position={[item.location.latitude, item.location.longitude]}
+                icon={icon}
+              >
+                <Popup>
+                  <strong>{item.name}</strong>
+                  <br />
+                  Dirección: {item.location.address} <br />
+                  Ciudad: {item.location.city.name}
+                  <br />
+                  Departamento: {item.location.city.department.name}
+                </Popup>
+              </Marker>
+            );
+          })}
         </>
       ) : (
         <div>No se proporcianaron ubicaciones en el mapa</div>

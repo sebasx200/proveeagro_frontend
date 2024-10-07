@@ -11,13 +11,14 @@ function MapLocations() {
     data: farmSuppliers,
     loading: loadingLocations,
     error: errorLocations,
-  } = useFetchData("location/farms_suppliers_locations/");
+  } = useFetchData("location/farm_supplier_locations/");
 
   const [farmLocations, setFarmLocations] = useState([]);
   const [supplierLocations, setSupplierLocations] = useState([]);
   const [allLocations, setAllLocations] = useState([]);
   const [selection, setSelection] = useState(null);
 
+  // this effect is used to load all the locations from the server and set them according to its type
   useEffect(() => {
     if (farmSuppliers) {
       const farms = [];
@@ -36,22 +37,27 @@ function MapLocations() {
     }
   }, [farmSuppliers]);
 
+  // when all the data is ready the allLoaction state is fill with all the locations
   useEffect(() => {
     if (farmLocations && supplierLocations) {
       setAllLocations([...supplierLocations, ...farmLocations]);
     }
   }, [farmLocations, supplierLocations]);
 
+  // this effect updates the data that has to be displayed in the map according to the user selection
   useEffect(() => {
     const filtered = allLocations.filter((item) => {
-      if (filterSelect === "1") return true; // All suppliers
-      if (filterSelect === "2") return item.created_by === user.id; // Added by current user
-      if (filterSelect === "3") return item.is_added_by_superuser === true; // Suppliers added by superusers
+      if (filterSelect === "1") return true; // All locations (default)
+      if (filterSelect === "2") return item.type === "supplier"; // all suppliers
+      if (filterSelect === "3")
+        return item.created_by === user.id && item.type === "supplier"; // suppliers created by current user
+      if (filterSelect === "4") return item.type === "farm"; // Farms added by the user
       return true;
     });
     setSelection(filtered);
   }, [filterSelect, allLocations, user]);
 
+  // handles the selection in the filter
   const handleFilter = (e) => {
     setFilterSelect(e.target.value);
   };
@@ -65,11 +71,10 @@ function MapLocations() {
             <h5>Mapa de ubicaciones</h5>
             <select className="form-select" onChange={handleFilter}>
               <option value="">Seleccionar filtro</option>
-              <option value={"1"}>Todos los proveedores</option>
-              <option value={"2"}>
-                Proveedores añadidos por mí Añadidos por mí
-              </option>
-              <option value={"3"}>Mis fincas</option>
+              <option value={"1"}>Todas las ubicaciones</option>
+              <option value={"2"}>Todos los proveedores</option>
+              <option value={"3"}>Proveedores añadidos por mí</option>
+              <option value={"4"}>Mis granjas</option>
             </select>
           </div>
         </div>
@@ -78,6 +83,7 @@ function MapLocations() {
         <div>Cargando ubicaciones...</div>
       ) : (
         <>
+          {/* the map component is called and the prop data is passed according to the user selection */}
           {selection ? (
             <LocationsMap data={selection} />
           ) : (
