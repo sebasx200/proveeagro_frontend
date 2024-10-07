@@ -1,20 +1,3 @@
-.supplierPage{
-    background-image: url('/img/imgVerProvee.png');
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh;
-    
-    
-}
-
-.addSupplierPage{
-    background-image: url('/img/imgAddProvee2.png');
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh;
-
-}
-
 .formPanel{
     background-color: rgba(236, 236, 236, 0.8);
     border-radius: 10px;

@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useFetchData from "../../hooks/useFetchData";
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
+import useUser from "../../hooks/useUser";
 
 function SupplierList() {
   const [searchText, setSearchText] = useState("");
+  const [filterSelect, setFilterSelect] = useState(null);
+  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
+  const { user } = useUser();
   const navigate = useNavigate();
 
   // Fetch the suppliers using the useFetchData hook
@@ -13,6 +17,16 @@ function SupplierList() {
     loading: loadingSuppliers,
     error: errorSuppliers,
   } = useFetchData("/supplier/suppliers/");
+
+  useEffect(() => {
+    const filtered = suppliers.filter((supplier) => {
+      if (filterSelect === "1") return true; // All suppliers
+      if (filterSelect === "2") return supplier.created_by === user.id; // Added by current user
+      if (filterSelect === "3") return supplier.is_added_by_superuser === true; // Suppliers added by superusers
+      return true;
+    });
+    setFilteredSuppliers(filtered);
+  }, [filterSelect, suppliers, user]);
 
   // these are the table columns
   const columns = [
@@ -40,35 +54,43 @@ function SupplierList() {
   };
 
   // this filters the suppliers taking the text in the search box
-  const filteredSuppliers = suppliers.filter((supplier) =>
+  const searchedSuppliers = filteredSuppliers.filter((supplier) =>
     supplier.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  if (errorSuppliers) {
-    return <div>Error al cargar los proveedores...</div>;
-  }
+  const handleFilter = (e) => {
+    setFilterSelect(e.target.value);
+  };
 
   return (
     <div>
       <div className="row">
-        <div className="col-md-3">
+        <div className="col-md-4">
           {/* This is the searching input */}
-          <input
-            className="form-control mb-3"
-            type="text"
-            placeholder="Buscar proveedor"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
+          <div className="d-flex gap-3 mb-3">
+            <input
+              className="form-control"
+              type="text"
+              placeholder="Buscar proveedor"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+            <select className="form-select" onChange={handleFilter}>
+              <option value="">Seleccionar filtro</option>
+              <option value={"1"}>Todos los proveedores</option>
+              <option value={"2"}>Añadidos por mí</option>
+              <option value={"3"}>Proveedores por defecto</option>
+            </select>
+          </div>
         </div>
       </div>
       {/* Table of suppliers */}
       {loadingSuppliers ? (
-        <div>loading suppliers...</div>
+        <div>Cargando proveedores...</div>
       ) : (
         <DataTable
           columns={columns}
-          data={filteredSuppliers}
+          data={searchedSuppliers}
           title="Proveedores registrados"
           selectableRowsHighlight
           onRowClicked={handleRowClick}
@@ -79,6 +101,7 @@ function SupplierList() {
           striped
         />
       )}
+      {errorSuppliers && <div>Error al cargar los proveedores...</div>}
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import RegisterForm from "../../components/forms/RegisterForm";
-import styles from "./Farms.module.css";
+import styles from "../dashboard/Dashboard.module.css";
 
 function EditFarm() {
   return (
-    <div className={styles.farmForm}>
+    <div className={styles.backgroundPages}>
       <RegisterForm type={"farm"} />
     </div>
   );

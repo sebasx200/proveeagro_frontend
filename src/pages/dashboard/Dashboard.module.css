@@ -1,20 +1,3 @@
-.homePage{
-    background-image: url('/img/imgHome.png');
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh;
-    color: white;
-    
-}
-
-.agendaPage{
-    background-image: url('/img/img12.png');
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh;
-    
-}
-
 .agendaPanel {
     background-color: rgba(236, 236, 236, 0.8);
     border-radius: 10px;
@@ -34,4 +17,12 @@
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     
+}
+
+.backgroundPages {
+    background-image: url('/img/backgroundImg.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    min-height: 100vh;
 }
