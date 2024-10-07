@@ -11,6 +11,7 @@ import EditSupplier from "./pages/suppliers/EditSupplier";
 import Farms from "./pages/farms/Farms";
 import AddFarm from "./pages/farms/AddFarm";
 import EditFarm from "./pages/farms/EditFarm";
+import Locations from "./pages/dashboard/Locations";
 import UserProfile from "./pages/dashboard/UserProfile";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/ui/Navbar";
@@ -114,6 +115,15 @@ function App() {
                 <ProtectedRoute>
                   <PageTitle title="Granja" />
                   <EditFarm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/locations/"
+              element={
+                <ProtectedRoute>
+                  <PageTitle title="Ubicaciones" />
+                  <Locations />
                 </ProtectedRoute>
               }
             />

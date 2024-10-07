@@ -14,10 +14,12 @@ import styles from "../../pages/farms/Farms.module.css";
 import FarmSupplierModal from "../modals/FarmSupplierModal";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
+import useUser from "../../hooks/useUser";
 import PropTypes from "prop-types";
 
 /** This is the form for adding and editing farms and suppliers */
 function RegisterForm({ type }) {
+  const { user } = useUser();
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState("");
@@ -27,6 +29,7 @@ function RegisterForm({ type }) {
   const [endpoint, setEndpoint] = useState(null);
   // this state works for the selected farms in the modal
   const [selectedFarms, setselectedFarms] = useState([]);
+  const [currentUser, setCurrentUser] = useState(false);
 
   // custom hook for post new data initialization
   const {
@@ -173,14 +176,7 @@ function RegisterForm({ type }) {
     if (updatedData) {
       toast.success(updatedData.name + " se actualizó correctamente");
     }
-  }, [
-    sentData,
-    params.id,
-    sentFarmSupplier,
-    updatedData,
-    navigate,
-    type,
-  ]);
+  }, [sentData, params.id, sentFarmSupplier, updatedData, navigate, type]);
 
   // Effect to load item if editing
   useEffect(() => {
@@ -196,6 +192,7 @@ function RegisterForm({ type }) {
           setValue("location.city", data.location.city.id);
           setLatitude(data.location.latitude);
           setLongitude(data.location.longitude);
+          setCurrentUser(user);
         } catch (err) {
           console.error(err);
         } finally {
@@ -204,7 +201,7 @@ function RegisterForm({ type }) {
       }
     }
     loadItem();
-  }, [params.id, setValue, type]);
+  }, [params.id, setValue, type, user]);
 
   // Handles department change
   const handleDepartmentChange = (e) => {
@@ -312,17 +309,27 @@ function RegisterForm({ type }) {
                 <div className="row gap-3">
                   {params.id ? (
                     <>
-                      <FormButton
-                        type="submit"
-                        text={loadingUpdate ? "Cargando" : "Guardar cambios"}
-                        className={"btn btn-primary"}
-                      />
-                      <FormButton
-                        type="submit"
-                        text={loadingDelete ? "Cargando" : "Eliminar"}
-                        className={"btn btn-danger"}
-                        onClick={(e) => handleDeleteItem(e, params.id)}
-                      />
+                      {currentUser &&
+                        (currentUser.id === selectedItem.created_by ||
+                          currentUser.is_superuser) && (
+                          <FormButton
+                            type="submit"
+                            text={
+                              loadingUpdate ? "Cargando" : "Guardar cambios"
+                            }
+                            className={"btn btn-primary"}
+                          />
+                        )}
+                      {currentUser &&
+                        (currentUser.id === selectedItem.created_by ||
+                          currentUser.is_superuser) && (
+                          <FormButton
+                            type="submit"
+                            text={loadingDelete ? "Cargando" : "Eliminar"}
+                            className={"btn btn-danger"}
+                            onClick={(e) => handleDeleteItem(e, params.id)}
+                          />
+                        )}
                       {type === "supplier" && (
                         <FormButton
                           text={"Añadir a la agenda"}

@@ -79,6 +79,11 @@ function Navbar() {
                   </li>
                 </ul>
               </li>
+              <li className="nav-item">
+                <Link to={"/locations/"} className="nav-link">
+                  Ubicaciones
+                </Link>
+              </li>
             </ul>
           )}
 
