@@ -17,8 +17,9 @@ import NotFound from "./pages/NotFound";
 import Navbar from "./components/ui/Navbar";
 import Footer from "./components/ui/Footer";
 import { UserProvider } from "./components/UserContext";
-
 import ProtectedRoute from "./components/ProtectedRoute";
+import useUser from "./hooks/useUser";
+import PropTypes from "prop-types";
 
 function Logout() {
   localStorage.clear();
@@ -29,6 +30,15 @@ function RegisterAndLogout() {
   localStorage.clear();
   return <Register />;
 }
+
+function CurrentUser({ children }) {
+  const { user } = useUser();
+  return user ? <ProtectedRoute>{children}</ProtectedRoute> : children;
+}
+
+CurrentUser.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 function App() {
   return (
@@ -67,10 +77,10 @@ function App() {
             <Route
               path="/supplier/suppliers/"
               element={
-                <ProtectedRoute>
+                <CurrentUser>
                   <PageTitle title="Proveedores" />
                   <Suppliers />
-                </ProtectedRoute>
+                </CurrentUser>
               }
             />
             <Route
