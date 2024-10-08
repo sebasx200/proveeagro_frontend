@@ -8,7 +8,7 @@ import useFetchData from "../../hooks/useFetchData";
 import usePutData from "../../hooks/usePutData";
 import useDeleteData from "../../hooks/useDeleteData";
 import api from "../../api/api";
-import { Map, LocationMap } from "../Maps";
+import { Map, LocationMap } from "../maps/Maps";
 import { SpanMandatory, FormButton } from "../ui/FormComponents";
 import styles from "../../pages/farms/Farms.module.css";
 import FarmSupplierModal from "../modals/FarmSupplierModal";

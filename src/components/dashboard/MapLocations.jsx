@@ -64,7 +64,7 @@ function MapLocations() {
 
   return (
     <div>
-      <div className="row">
+      <div className="row p-3">
         <div className="col-md-6">
           {/* This is the searching input */}
           <div className="d-flex gap-3 mb-3">
@@ -85,7 +85,9 @@ function MapLocations() {
         <>
           {/* the map component is called and the prop data is passed according to the user selection */}
           {selection ? (
+            <div className="p-3">
             <LocationsMap data={selection} />
+            </div>
           ) : (
             <div>No se proporcianaron ubicaciones en el mapa</div>
           )}
