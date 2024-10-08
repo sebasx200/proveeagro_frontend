@@ -46,6 +46,11 @@ function SupplierList() {
       selector: (row) => row.email,
       sortable: true,
     },
+    {
+      name: "Veces agendado",
+      selector: (row) => row.agenda_count,
+      sortable: true,
+    },
   ];
 
   // this handles the click on a table row
