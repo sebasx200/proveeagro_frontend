@@ -33,7 +33,7 @@ function RegisterAndLogout() {
 
 function CurrentUser({ children }) {
   const { user } = useUser();
-  return user ? <ProtectedRoute>{children}</ProtectedRoute> : children;
+  return children;
 }
 
 CurrentUser.propTypes = {

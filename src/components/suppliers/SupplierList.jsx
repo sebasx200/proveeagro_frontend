@@ -20,6 +20,9 @@ function SupplierList() {
 
   useEffect(() => {
     const filtered = suppliers.filter((supplier) => {
+      if (!user) {
+        return supplier.is_added_by_superuser === true;
+      }
       if (filterSelect === "1") return true; // All suppliers
       if (filterSelect === "2") return supplier.created_by === user.id; // Added by current user
       if (filterSelect === "3") return supplier.is_added_by_superuser === true; // Suppliers added by superusers
@@ -80,12 +83,14 @@ function SupplierList() {
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
-            <select className="form-select" onChange={handleFilter}>
-              <option value="">Seleccionar filtro</option>
-              <option value={"1"}>Todos los proveedores</option>
-              <option value={"2"}>Añadidos por mí</option>
-              <option value={"3"}>Proveedores por defecto</option>
-            </select>
+            {user && (
+              <select className="form-select" onChange={handleFilter}>
+                <option value="">Seleccionar filtro</option>
+                <option value={"1"}>Todos los proveedores</option>
+                <option value={"2"}>Añadidos por mí</option>
+                <option value={"3"}>Proveedores por defecto</option>
+              </select>
+            )}
           </div>
         </div>
       </div>
