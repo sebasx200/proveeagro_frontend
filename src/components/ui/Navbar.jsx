@@ -96,6 +96,11 @@ function Navbar() {
                     Proveedores
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link to={"/locations/"} className="nav-link">
+                    Ubicaciones
+                  </Link>
+                </li>
               </ul>
               <ul className="navbar-nav ms-auto">
                 <li className="nav-item">

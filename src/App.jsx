@@ -131,10 +131,10 @@ function App() {
             <Route
               path="/locations/"
               element={
-                <ProtectedRoute>
+                <CurrentUser>
                   <PageTitle title="Ubicaciones" />
                   <Locations />
-                </ProtectedRoute>
+                </CurrentUser>
               }
             />
             <Route
