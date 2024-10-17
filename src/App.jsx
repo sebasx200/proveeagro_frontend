@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
-import Home from "./pages/dashboard/Home";
 import Agenda from "./pages/dashboard/Agenda";
 import Suppliers from "./pages/suppliers/Suppliers";
 import AddSupplier from "./pages/suppliers/AddSupplier";
@@ -47,15 +46,6 @@ function App() {
         <div className="App">
           <Navbar />
           <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <PageTitle title="Inicio" />
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="/user/profile"
               element={
