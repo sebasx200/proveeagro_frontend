@@ -64,18 +64,20 @@ function MapLocations() {
 
   return (
     <div>
-      <div className="row">
+      <div className="row p-3">
         <div className="col-md-6">
           {/* This is the searching input */}
           <div className="d-flex gap-3 mb-3">
             <h5>Mapa de ubicaciones</h5>
-            <select className="form-select" onChange={handleFilter}>
-              <option value="">Seleccionar filtro</option>
-              <option value={"1"}>Todas las ubicaciones</option>
-              <option value={"2"}>Todos los proveedores</option>
-              <option value={"3"}>Proveedores añadidos por mí</option>
-              <option value={"4"}>Mis granjas</option>
-            </select>
+            {user && (
+              <select className="form-select" onChange={handleFilter}>
+                <option value="">Seleccionar filtro</option>
+                <option value={"1"}>Todas las ubicaciones</option>
+                <option value={"2"}>Todos los proveedores</option>
+                <option value={"3"}>Proveedores añadidos por mí</option>
+                <option value={"4"}>Mis granjas</option>
+              </select>
+            )}
           </div>
         </div>
       </div>
@@ -85,7 +87,9 @@ function MapLocations() {
         <>
           {/* the map component is called and the prop data is passed according to the user selection */}
           {selection ? (
-            <LocationsMap data={selection} />
+            <div className="p-3">
+              <LocationsMap data={selection} />
+            </div>
           ) : (
             <div>No se proporcianaron ubicaciones en el mapa</div>
           )}

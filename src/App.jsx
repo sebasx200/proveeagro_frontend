@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
-import Home from "./pages/dashboard/Home";
 import Agenda from "./pages/dashboard/Agenda";
 import Suppliers from "./pages/suppliers/Suppliers";
 import AddSupplier from "./pages/suppliers/AddSupplier";
@@ -17,8 +16,9 @@ import NotFound from "./pages/NotFound";
 import Navbar from "./components/ui/Navbar";
 import Footer from "./components/ui/Footer";
 import { UserProvider } from "./components/UserContext";
-
 import ProtectedRoute from "./components/ProtectedRoute";
+import useUser from "./hooks/useUser";
+import PropTypes from "prop-types";
 
 function Logout() {
   localStorage.clear();
@@ -30,6 +30,15 @@ function RegisterAndLogout() {
   return <Register />;
 }
 
+function CurrentUser({ children }) {
+  const { user } = useUser();
+  return children;
+}
+
+CurrentUser.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 function App() {
   return (
     <UserProvider>
@@ -37,15 +46,6 @@ function App() {
         <div className="App">
           <Navbar />
           <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <PageTitle title="Inicio" />
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="/user/profile"
               element={
@@ -67,10 +67,10 @@ function App() {
             <Route
               path="/supplier/suppliers/"
               element={
-                <ProtectedRoute>
+                <CurrentUser>
                   <PageTitle title="Proveedores" />
                   <Suppliers />
-                </ProtectedRoute>
+                </CurrentUser>
               }
             />
             <Route
@@ -121,10 +121,10 @@ function App() {
             <Route
               path="/locations/"
               element={
-                <ProtectedRoute>
+                <CurrentUser>
                   <PageTitle title="Ubicaciones" />
                   <Locations />
-                </ProtectedRoute>
+                </CurrentUser>
               }
             />
             <Route

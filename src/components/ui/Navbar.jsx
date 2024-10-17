@@ -89,18 +89,32 @@ function Navbar() {
 
           {/* if the user is not authorized, show the following links */}
           {!user && (
-            <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link to="/login" className="nav-link">
-                  Iniciar sesión
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/register" className="nav-link">
-                  Registrarse
-                </Link>
-              </li>
-            </ul>
+            <>
+              <ul className="navbar-nav">
+                <li className="nav-item">
+                  <Link to={"/supplier/suppliers"} className="nav-link">
+                    Proveedores
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to={"/locations/"} className="nav-link">
+                    Ubicaciones
+                  </Link>
+                </li>
+              </ul>
+              <ul className="navbar-nav ms-auto">
+                <li className="nav-item">
+                  <Link to="/login" className="nav-link">
+                    Iniciar sesión
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/register" className="nav-link">
+                    Registrarse
+                  </Link>
+                </li>
+              </ul>
+            </>
           )}
           {/* if the user is authorized, show the following links */}
           {user && (
