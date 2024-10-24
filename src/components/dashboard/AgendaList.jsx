@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import useFetchData from "../../hooks/useFetchData";
 import useDeleteData from "../../hooks/useDeleteData";
@@ -12,10 +13,18 @@ import styles from "../../pages/dashboard/Dashboard.module.css";
 function AgendaList() {
   // custom hook initialization to get the farm suppliers relation
   const {
-    data: farmSuppliers,
+    data,
     loading: loadingData,
     error: errorData,
   } = useFetchData("/farm/farm_suppliers/");
+
+  const [farmSuppliers, setFarmSuppliers] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      setFarmSuppliers(data);
+    }
+  }, [data]);
 
   const {
     loading: loadingDelete,
@@ -30,35 +39,46 @@ function AgendaList() {
     navigate(`/supplier/suppliers/${supplierId}`);
   };
 
-  const handleDeleteFarmSupplier = (id) => {
-    const deleteConfirmation = window.confirm(
-      "¿Eliminar la relación de la agenda?"
-    );
+  // this handles the delete request for the farm - supplier relation
+  const handleDeleteFarmSupplier = (farmId, supplierId, relationId) => {
+    const deleteConfirmation = window.confirm("¿Eliminar esta relación?");
+
     if (deleteConfirmation) {
-      removeData(`/farm/farm_suppliers/${id}/`);
-      toast.success("El registro fue eliminado correctamente");
+      const updatedFarmSuppliers = farmSuppliers.map((farm) => {
+        if (farm.id === farmId) {
+          return {
+            ...farm,
+            suppliers: farm.suppliers.filter(
+              (supplier) => supplier.id !== supplierId
+            ),
+          };
+        }
+        return farm;
+      });
+      setFarmSuppliers(updatedFarmSuppliers);
+      removeData(`/farm/farm_supplier_relation/${relationId}/`);
+      toast.success("La relación fue eliminada correctamente");
     }
   };
-
   return (
     <>
       <div className="d-flex justify-content-center gap-3">
         {loadingData ? (
-          <div>loading agenda...</div>
+          <div>cargando agenda...</div>
         ) : (
-          <>
+          <div className={`col-md-6 p-3 ${styles.agendaPanel}`}>
+            <h3>Mi Agenda</h3>
             {farmSuppliers.length !== 0 ? (
-              <div className={`col-md-6 p-3 ${styles.agendaPanel}`}>
-                <h3>Mi Agenda</h3>
-                {farmSuppliers.map((farmSupplier, index) => (
-                  <Accordion className="mt-3" key={index}>
-                    <Accordion.Item eventKey="0">
-                      <Accordion.Header>{farmSupplier.name}</Accordion.Header>
-                      <Accordion.Body>
+              farmSuppliers.map((farm, index) => (
+                <Accordion className="mt-3" key={index}>
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>{farm.name}</Accordion.Header>
+                    <Accordion.Body>
+                      {farm.suppliers && farm.suppliers.length !== 0 ? (
                         <ListGroup>
-                          {farmSupplier.suppliers.map((supplier, index) => (
+                          {farm.suppliers.map((supplier, supplierIndex) => (
                             <div
-                              key={index}
+                              key={supplierIndex}
                               className="d-flex justify-content-between align-items-center"
                             >
                               <ListGroup.Item
@@ -71,7 +91,11 @@ function AgendaList() {
                               <Button
                                 variant="danger"
                                 onClick={() =>
-                                  handleDeleteFarmSupplier(farmSupplier.id)
+                                  handleDeleteFarmSupplier(
+                                    farm.id,
+                                    supplier.id,
+                                    supplier.relation_id
+                                  )
                                 }
                               >
                                 {loadingDelete ? "Cargando..." : "Eliminar"}
@@ -79,17 +103,19 @@ function AgendaList() {
                             </div>
                           ))}
                         </ListGroup>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </Accordion>
-                ))}
-              </div>
+                      ) : (
+                        <div>
+                          No se han añadido proveedores a la agenda de la granja
+                        </div>
+                      )}
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              ))
             ) : (
-              <div className={`col-md-6 p-3 ${styles.agendaPanel}`}>
-                No se ha añadido nada en la agenda
-              </div>
+              <div>No se han añadido granjas</div>
             )}
-          </>
+          </div>
         )}
         <div className={`col-md-4 p-3 ${styles.agendaPanel}`}>
           <RecentActions />
