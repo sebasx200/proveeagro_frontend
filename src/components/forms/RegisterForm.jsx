@@ -97,7 +97,7 @@ function RegisterForm({ type }) {
       for (const farm of selectedFarms) {
         dataToAgenda.farm = farm.id;
         dataToAgenda.supplier = selectedItem.id;
-        postFarmSupplier("/farm/farm_suppliers/", dataToAgenda);
+        postFarmSupplier("/farm/farm_supplier_relation/", dataToAgenda);
       }
     } else {
       window.alert("No ha seleccionado ninguna granja");
