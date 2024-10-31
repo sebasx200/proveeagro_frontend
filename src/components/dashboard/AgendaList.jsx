@@ -62,7 +62,7 @@ function AgendaList() {
   };
   return (
     <>
-      <div className="d-flex justify-content-center gap-3">
+      <div className="row justify-content-center gap-3">
         {loadingData ? (
           <div>cargando agenda...</div>
         ) : (
