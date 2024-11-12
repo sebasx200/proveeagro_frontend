@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 import { toast } from "react-hot-toast";
 import useUser from "../../hooks/useUser";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 // import components
 import {
@@ -41,7 +41,7 @@ function FormLogin({ route }) {
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
       login();
       toast.success("Bienvenido a Proveeagro " + username);
-      navigate("/farm/farms");
+      navigate("/farm/farms/");
     } catch (error) {
       setServerError(error.response.data);
       toast.error("Error al iniciar sesión");
@@ -127,9 +127,7 @@ function FormLogin({ route }) {
           {serverError &&
             Object.keys(serverError).map((key, index) => (
               <div key={index} className="alert alert-danger mt-3" role="alert">
-                <p>
-                  {serverError[key]}
-                </p>
+                <p>{serverError[key]}</p>
               </div>
             ))}
           {/* submit button */}

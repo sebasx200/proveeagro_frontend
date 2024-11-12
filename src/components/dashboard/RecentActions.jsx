@@ -30,7 +30,6 @@ const RecentActions = () => {
       setRecentSuppliers(suppliers);
       setRecentFarmsSuppliers(farms_suppliers);
     }
-    console.log(data);
   }, [data]);
 
   const renderAction = (item) => {

@@ -7,7 +7,7 @@ function useCitiesDepartments(selectedDepartment) {
   const [filteredCities, setFilteredCities] = useState([]);
 
   const { data: departments } = useFetchData(
-    "/location/department/departments/"
+    "/location/departments/"
   );
 
   // this effect loads the data needed to filter the cities depending on the department_id
@@ -16,7 +16,7 @@ function useCitiesDepartments(selectedDepartment) {
       if (selectedDepartment) {
         try {
           const response = await api.get(
-            `/location/city/cities?department_id=${selectedDepartment}`
+            `/location/cities/?department_id=${selectedDepartment}`
           );
           setFilteredCities(response.data);
         } catch (error) {
