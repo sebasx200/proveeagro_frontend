@@ -80,6 +80,11 @@ function Navbar() {
                 </ul>
               </li>
               <li className="nav-item">
+                <Link to={"/supplies/"} className="nav-link">
+                  Insumos
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link to={"/locations/"} className="nav-link">
                   Ubicaciones
                 </Link>
