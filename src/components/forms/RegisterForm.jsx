@@ -31,6 +31,8 @@ function RegisterForm({ type }) {
   const [selectedFarms, setselectedFarms] = useState([]);
   const [currentUser, setCurrentUser] = useState(false);
 
+  const [supplies, setSupplies] = useState([]);
+
   // custom hook for post new data initialization
   const {
     data: sentData,
@@ -193,6 +195,7 @@ function RegisterForm({ type }) {
           setLatitude(data.location.latitude);
           setLongitude(data.location.longitude);
           setCurrentUser(user);
+          if (data.supplies) setSupplies(data.supplies);
         } catch (err) {
           console.error(err);
         } finally {
@@ -411,6 +414,16 @@ function RegisterForm({ type }) {
             )
           ) : (
             <Map onMapClick={handleMapClick} />
+          )}
+          {type === "supplier" && (
+          <div className="m-3">
+          <h4>Lista de insumos que vende el proveedor</h4>
+          <ul>
+            {supplies.map((supply, index) => (
+              <li key={index}>{supply.name}</li>
+            ))}
+          </ul>
+          </div>
           )}
         </div>
       </div>
