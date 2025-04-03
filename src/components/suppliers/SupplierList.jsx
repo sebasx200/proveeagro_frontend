@@ -6,7 +6,7 @@ import useUser from "../../hooks/useUser";
 
 function SupplierList() {
   const [searchText, setSearchText] = useState("");
-  const [filterSelect, setFilterSelect] = useState(null);
+  const [filterSelect, setFilterSelect] = useState("all");
   const [filteredSuppliers, setFilteredSuppliers] = useState([]);
   const { user } = useUser();
   const navigate = useNavigate();
@@ -18,14 +18,23 @@ function SupplierList() {
     error: errorSuppliers,
   } = useFetchData("/supplier/suppliers/");
 
+  const {
+    data: categories,
+    loading: loadingCategories,
+    error: errorCategories,
+  } = useFetchData("/inventory/categories/");
+
   useEffect(() => {
     const filtered = suppliers.filter((supplier) => {
       if (!user) {
         return supplier.is_added_by_superuser === true;
       }
-      if (filterSelect === "1") return true; // All suppliers
-      if (filterSelect === "2") return supplier.created_by === user.id; // Added by current user
-      if (filterSelect === "3") return supplier.is_added_by_superuser === true; // Suppliers added by superusers
+      if (filterSelect === "all") return true; // All suppliers
+      if (filterSelect === "by_me") return supplier.created_by === user.id; // Added by current user
+      if (filterSelect === "default")
+        return supplier.is_added_by_superuser === true; // Suppliers added by superusers
+      if (filterSelect != "all" && filterSelect != "by_me" && filterSelect != "default") 
+        return supplier.supplies.some(supply => supply.category == filterSelect);  
       return true;
     });
     setFilteredSuppliers(filtered);
@@ -84,12 +93,23 @@ function SupplierList() {
               onChange={(e) => setSearchText(e.target.value)}
             />
             {user && (
-              <select className="form-select" onChange={handleFilter}>
-                <option value="">Seleccionar filtro</option>
-                <option value={"1"}>Todos los proveedores</option>
-                <option value={"2"}>Añadidos por mí</option>
-                <option value={"3"}>Proveedores por defecto</option>
-              </select>
+              <>
+                {loadingCategories ? (
+                  <div>Cargando las categorías</div>
+                ) : (
+                  <select className="form-select" onChange={handleFilter}>
+                    <option value={"all"}>Seleccionar filtro</option>
+                    <option value={"all"}>Todos los proveedores</option>
+                    <option value={"by_me"}>Añadidos por mí</option>
+                    <option value={"default"}>Proveedores por defecto</option>
+                    {categories.map((category, index) => (
+                      <option key={index} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -112,6 +132,7 @@ function SupplierList() {
         />
       )}
       {errorSuppliers && <div>Error al cargar los proveedores...</div>}
+      {errorCategories && <div>Error al cargar las categorías</div>}
     </div>
   );
 }
